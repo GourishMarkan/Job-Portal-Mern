@@ -24,7 +24,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, "Please Enter Your Address"],
     },
-    niche: {
+    niches: {
       firstNiche: String,
       secondNiche: String,
       thirdNiche: String,

@@ -13,7 +13,7 @@ export const isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
   if (!decoded) {
     return next(new ErrorHandler("Login first to access this resource", 401));
   }
-  const user = await User.findById(decoded?._id).select("-password");
+  const user = await User.findById(decoded.id).select("-password");
   req.user = user;
   next();
 });

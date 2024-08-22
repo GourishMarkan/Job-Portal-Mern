@@ -127,3 +127,128 @@ export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
     user,
   });
 });
+
+export const updateProfile = catchAsyncErrors(async (req, res, next) => {
+  // const {
+  //   name,
+  //   email,
+  //   phoneNumber,
+  //   address,
+  //   firstNiche,
+  //   secondNiche,
+  //   thirdNiche,
+  //   coverLetter,
+
+  // } = req.body;
+  const newUserData = {
+    name: req.body.name,
+    email: req.body.email,
+    phoneNumber: req.body.phoneNumber,
+    address: req.body.address,
+    niches: {
+      firstNiche: req.body.firstNiche,
+      secondNiche: req.body.secondNiche,
+      thirdNiche: req.body.thirdNiche,
+    },
+    coverLetter: req.body.coverLetter,
+  };
+  const { firstNiche, secondNiche, thirdNiche } = newUserData.niches;
+  if (
+    req.user.role === "JobSeeker" &&
+    (!firstNiche || !secondNiche || !thirdNiche)
+  ) {
+    return next(new ErrorHandler("Please provide all the niches", 400));
+  }
+
+  if (req.files && req.files.resume) {
+    const { resume } = req.files;
+    if (resume) {
+      const currentResume = req.user.resume.public_id;
+      if (currentResume) {
+        try {
+          await cloudinary.uploader.destroy(currentResume);
+        } catch (e) {
+          return next(new ErrorHandler("Failed to delete pre resume", 500));
+        }
+      }
+      const newResume = await cloudinary.uploader.upload(resume.tempFilePath, {
+        folder: "Job_Seekers_Resume",
+      });
+      newUserData.resume = {
+        public_id: newResume.public_id,
+        url: newResume.secure_url,
+      };
+    }
+  }
+  const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+    new: true,
+    runValidators: true,
+    useFindAndModify: false,
+  });
+
+  res.status(200).json({
+    success: true,
+    user,
+    message: "Profile updated successfully",
+  });
+});
+
+export const updatePassword = catchAsyncErrors(async (req, res, next) => {
+  const { oldPassword, newPassword, confirmPassword } = req.body;
+  if (!oldPassword || !newPassword || !confirmPassword) {
+    return next(new ErrorHandler("Please fill all the fields", 400));
+  }
+
+  const user = await User.findById(req.user.id).select("+password");
+
+  const isPasswordCorrect = await user.comparePassword(oldPassword);
+  if (!isPasswordCorrect) {
+    return next(new ErrorHandler("Old password is incorrect", 400));
+  }
+
+  if (newPassword != confirmPassword) {
+    return next(new ErrorHandler("Password does not match", 400));
+  }
+
+  user.password = newPassword;
+  await user.save();
+  sendToken(user, 200, res, "Password updated successfully");
+});
+
+export const updateResume = catchAsyncErrors(async (req, res, next) => {
+  if (req.files) {
+    const { resume } = req.files;
+    console.log("resume", resume);
+    if (!resume) {
+      return next(new ErrorHandler("Please upload a resume", 400));
+    }
+    const currentResumeId = req.user.resume.public_id;
+    console.log("currentResume", currentResumeId);
+    if (currentResumeId) {
+      try {
+        await cloudinary.uploader.destroy(currentResumeId);
+      } catch (e) {
+        return next(new ErrorHandler("Failed to delete pre resume", 500));
+      }
+    }
+    const newResume = await cloudinary.uploader.upload(resume.tempFilePath, {
+      folder: "Job_Seekers_Resume",
+    });
+    console.log("temp file", resume.tempFilePath);
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        resume: {
+          public_id: newResume.public_id,
+          url: newResume.secure_url,
+        },
+      },
+      { new: true, runValidators: true, useFindAndModify: false }
+    );
+    res.status(200).json({
+      success: true,
+      user,
+      message: "Resume updated successfully",
+    });
+  }
+});
