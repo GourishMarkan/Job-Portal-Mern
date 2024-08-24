@@ -5,6 +5,8 @@ import cors from "cors";
 import { connectDB } from "./database/connection.js";
 import { errorMiddleware } from "./middlewares/error.js";
 import userRouter from "./routes/user.route.js";
+import jobRouter from "./routes/job.route.js";
+import applicationRouter from "./routes/application.route.js";
 import fileUpload from "express-fileupload";
 const app = express();
 config({ path: "./config/.env" });
@@ -29,4 +31,6 @@ connectDB();
 app.use(errorMiddleware);
 
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/job", jobRouter);
+app.use("/api/v1/application", applicationRouter);
 export default app;

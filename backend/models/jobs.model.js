@@ -54,7 +54,7 @@ const jobSchema = new mongoose.Schema({
     required: true,
   },
   newsLettersSent: {
-    type: Boolean,
+    type: Boolean, //send job to person who subscribed to news letter
     default: false,
   },
   jobPostedOn: {
