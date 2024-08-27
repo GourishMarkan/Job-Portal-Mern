@@ -1,16 +1,16 @@
-import { isAuthenticatedUser, isAuthorized } from "../middlewares/auth";
+import { isAuthenticatedUser, isAuthorized } from "../middlewares/auth.js";
 import {
   deleteApplication,
   employerGetApplication,
   jobSeekerGetApplication,
   postApplication,
-} from "../controllers/applicationController";
+} from "../controllers/applicationController.js";
 import express from "express";
 
 const router = express.Router();
 
 router.post(
-  "/post-application",
+  "/post-application/:id",
   isAuthenticatedUser,
   isAuthorized("Job Seeker"),
   postApplication
