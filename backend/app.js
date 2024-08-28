@@ -8,6 +8,8 @@ import userRouter from "./routes/user.route.js";
 import jobRouter from "./routes/job.route.js";
 import applicationRouter from "./routes/application.route.js";
 import fileUpload from "express-fileupload";
+import { newsLetterCron } from "./automation/newLetterCron.js";
+// import { sendEmail } from "./utils/sendEmail.js";
 const app = express();
 config({ path: "./config/.env" });
 app.use(
@@ -27,10 +29,16 @@ app.use(
     tempFileDir: "/tmp/",
   })
 );
+newsLetterCron();
 connectDB();
 app.use(errorMiddleware);
 
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/job", jobRouter);
 app.use("/api/v1/application", applicationRouter);
+// app.post("/send-email", async (req, res) => {
+//   const { email, subject, message } = req.body;
+//   await sendEmail({ email, subject, message });
+//   res.status(200).json({ message: "Email sent successfully" });
+// });
 export default app;
