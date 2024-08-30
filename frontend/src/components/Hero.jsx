@@ -11,9 +11,9 @@ const Hero = () => {
         Level
       </h4>
       <div className="ml-2 mr-2 max-w-[900px] text-center bg-[#dfdf07] text-[#111] px-18 py-12 rounded-[35px] font-medium  transition duration-300 hover:-translate-y-2.5 hover:bg-[#111] hover:text-white">
-        Explore a vast array of job listings in diverse industries. Whether
-        you're a seasoned professional or just starting out, find the perfect
-        role to advance your career. Our platform makes job searching easy and
+        Explore a vast array of job listings in diverse industries. Whether you
+        are a seasoned professional or just starting out, find the perfect role
+        to advance your career. Our platform makes job searching easy and
         efficient, bringing you closer to your next big opportunity.
       </div>
     </section>
