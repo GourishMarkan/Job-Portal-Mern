@@ -26,10 +26,11 @@ const Jobs = () => {
       dispatch(clearAllJobErrors());
     }
     dispatch(fetchJobs(city, niche, searchKeyword));
-  });
+  }, [dispatch, city, niche, error]);
   // const handleCityChange=(e)=>{
   //   setCity(e.target.value);
   // }
+  //  TODO add debouncing to search
   const handleSearch = () => {
     dispatch(fetchJobs(city, niche, searchKeyword));
   };
@@ -95,14 +96,15 @@ const Jobs = () => {
           </button>
           <FaSearch className="absolute top-4 right-6  text-[#111]   hidden" />
         </div>
-        <div className="flex gap-12">
-          <div className="w-1/4 flex flex-col gap-12">
-            <div className=" flex flex-col gap-1.5 ">
+        {/*  */}
+        <div className="flex    mt-5  ">
+          <div className=" hidden md:flex ml-4  flex-col gap-12">
+            <div className=" flex  mt-3 flex-col gap-1.5 ">
               <h2 className=" text-base font-medium pb-5 border-b border-gray-500 mb-5">
                 Filter Job By City
               </h2>
               {cities.map((city, index) => (
-                <div className="flex items-center gap-4" key={index}>
+                <div className="flex items-center gap-4 " key={index}>
                   <input
                     type="radio"
                     id={city}
@@ -117,11 +119,11 @@ const Jobs = () => {
                 </div>
               ))}
             </div>
-            <div className=" flex flex-col gap-1.5 ">
+            <div className=" flex  flex-col gap-1.5 ">
               <h2 className=" text-base font-medium pb-5 border-b border-gray-500 mb-5">
                 Filter Job By Niche
               </h2>
-              {cities.map((niche, index) => (
+              {nichesArray.map((niche, index) => (
                 <div className="flex items-center gap-4" key={index}>
                   <input
                     type="radio"
@@ -138,8 +140,83 @@ const Jobs = () => {
               ))}
             </div>
           </div>
-          <div className="w-3/4">
-            <div className="hidden"></div>
+          <div className="w-full md:w-3/4 ml-2">
+            {/* mobile filter */}
+            <div className=" flex flex-wrap gap-5  mt-5 md:hidden ">
+              <select
+                className="px-2 border py-1 md:p-0 "
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              >
+                <option value="">Filter By City</option>
+                {cities.map((city, index) => (
+                  <option value={city} key={index}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="px-2 border py-1 md:p-0 "
+                value={niche}
+                onChange={(e) => setNiche(e.target.value)}
+              >
+                <option value="">Filter By Niche</option>
+                {nichesArray.map((niche, index) => (
+                  <option value={niche} key={index}>
+                    {niche}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* job-container */}
+            {/* grid gap-10 py-12 w-full grid-cols-2 */}
+            <div className="grid gap-10 py-12 w-full grid-cols-2 ">
+              {jobs &&
+                jobs.map((element) => {
+                  return (
+                    <div
+                      className="transition duration-300 bg-[#f5f5f5] h-fit px-10 py-5 flex flex-col gap-1 rounded-md  no-underline hover:bg-[#85857c30]"
+                      key={element._id}
+                    >
+                      {element.hiringMultipleCandidates === "Yes" ? (
+                        <p className="text-[16px] text-[#008b00] bg-[#008b0033] px-1 py-0.5 rounded-md w-fit">
+                          Hiring Multiple Candidates
+                        </p>
+                      ) : (
+                        <p className="text-base text-[#0091ff] bg-[#0091ff56] py-0.5 px-1 rounded-md w-fit">
+                          Hiring
+                        </p>
+                      )}
+                      <p className="">{element.title}</p>
+                      <p className="text-base text-gray-500">
+                        {element.company}
+                      </p>
+                      <p className="text-base text-gray-500">
+                        {element.location}
+                      </p>
+                      <p className="text-base text-gray-500">
+                        <span className="font-semibold text-[#111] font-base">
+                          Rs. {element.salary}
+                        </span>
+                      </p>
+                      <p className="text-base text-gray-500">
+                        <span className="font-semibold text-[#111] font-base">
+                          Posted On:
+                        </span>{" "}
+                        {element.jobPostedOn.substring(0, 10)}
+                      </p>
+                      <div className="flex justify-end gap-4.5">
+                        <Link
+                          className=""
+                          to={`/post/application/${element._id}`}
+                        >
+                          Apply Now
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
           </div>
         </div>
       </section>
