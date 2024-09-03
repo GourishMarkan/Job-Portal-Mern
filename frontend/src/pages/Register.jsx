@@ -121,24 +121,24 @@ const Register = () => {
                   <option value="Employer">Register as an Employer</option>
                   <option value="Job Seeker">Register as a Job Seeker</option>
                 </select>
-                <FaRegUser className="w-1/12 text-2xl bg-[#dfdf07] h-10 p-2 text-[#fff]" />
+                <FaRegUser className="w-2/12 text-2xl bg-[#dfdf07] h-10 p-2 text-[#fff]" />
               </div>
             </div>
-          </div>
-          <div className="flex flex-col gap-2 flex-1">
-            <label htmlFor="name" className="">
-              Name
-            </label>
-            <div className="flex items-center rounded-lg">
-              <input
-                className="bg-[#87878778] p-2 border-none w-full"
-                name="name"
-                type="text"
-                placeholder="Your Name"
-                value={userDetails.name}
-                onChange={handleUserDetails}
-              />
-              <FaPencilAlt className="w-1/12 text-2xl bg-[#dfdf07] h-10 p-2 text-[#fff]" />
+            <div className="flex flex-col gap-2 flex-1">
+              <label htmlFor="name" className="">
+                Name
+              </label>
+              <div className="flex items-center rounded-lg">
+                <input
+                  className="bg-[#87878778] p-2 border-none w-full"
+                  name="name"
+                  type="text"
+                  placeholder="Your Name"
+                  value={userDetails.name}
+                  onChange={handleUserDetails}
+                />
+                <FaPencilAlt className="w-2/12 text-2xl bg-[#dfdf07] h-10 p-2 text-[#fff] " />
+              </div>
             </div>
           </div>
           <div className="flex gap-5">

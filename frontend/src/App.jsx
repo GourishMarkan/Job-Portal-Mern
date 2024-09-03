@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import PostApplication from "./pages/PostApplication";
 import Jobs from "./pages/Jobs";
 import "./App.css";
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <>
@@ -26,6 +27,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ToastContainer position="top-right" theme="dark" />
         <Footer />
       </Router>
     </>
