@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
+/*
 * {
   margin: 0;
   padding: 0;
@@ -36,7 +36,8 @@ input::-webkit-outer-spin-button {
     font-size: 18px;
     font-weight: 400;
     min-width: -webkit-fill-available;
-    /* min-width: -moz-fit-content; */
+    comment below line
+    min-width: -moz-fit-content;
     max-width: fit-content;
     max-width: -moz-fit-content;
     padding: 10px;
@@ -579,7 +580,8 @@ footer div ul a span {
   padding: 8px;
   border: none;
   width: 100%;
-  /* height: 100%; */
+  comment below line-
+  height: 100%;
 }
 .authPage .container form .inputTag div input:focus,
 .authPage .container form .inputTag div select:focus,
@@ -745,7 +747,8 @@ footer div ul a span {
   gap: 5px;
   border-radius: 6px;
 }
-/* .jobs .container .jobs_container .card .product-image {
+commet till above
+ .jobs .container .jobs_container .card .product-image {
   background: rgba(133, 133, 124, 0.19);
   display: flex;
   justify-content: center;
@@ -767,7 +770,8 @@ footer div ul a span {
   right: 17px;
   top: 18px;
   font-size: 24px;
-} */
+}  
+comment till above 
 .jobs .container .jobs_container .card .title {
   color: #111;
   font-size: 24px;
@@ -1027,7 +1031,8 @@ footer div ul a span {
   gap: 30px;
 }
 .account_components .applications_container .card {
-  /* border-bottom: 1px solid rgb(133, 133, 133); */
+  comment belwo line
+  border-bottom: 1px solid rgb(133, 133, 133);
   margin-bottom: 30px;
   background: #8080803d;
   padding: 25px 12px;
@@ -1238,8 +1243,8 @@ footer div ul a span {
     margin-right: 0;
   }
 }
-
-/* .application_page {
+from line 1241 to 1277 commet it
+.application_page {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1274,7 +1279,7 @@ footer div ul a span {
   .application_page div {
     min-width: 100%;
   }
-} */
+}
 
 .application_page {
   display: flex;
@@ -1415,4 +1420,4 @@ button:disabled:hover {
   background: gray;
   cursor: not-allowed;
   color: #111;
-}
+}   */

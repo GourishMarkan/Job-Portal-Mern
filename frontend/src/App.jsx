@@ -10,7 +10,15 @@ import PostApplication from "./pages/PostApplication";
 import Jobs from "./pages/Jobs";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getUser } from "./store/slices/userSlice";
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, []);
   return (
     <>
       <Router>
