@@ -20,10 +20,10 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserDetails({ ...userDetails, [name]: value });
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setUserDetails({ ...userDetails, [name]: value });
+  // };
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData();

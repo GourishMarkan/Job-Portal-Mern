@@ -1,7 +1,8 @@
+/* eslint-disable no-self-assign */
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../config/url";
-import { act } from "react";
+// import { act } from "react";
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -146,6 +147,7 @@ export const logout = () => async (dispatch) => {
     const response = await axios.get(`${BASE_URL}/user/logout`, {
       withCredentials: true,
     });
+    console.log(response);
     dispatch(userSlice.actions.logoutSuccess());
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
