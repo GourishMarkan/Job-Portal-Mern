@@ -123,7 +123,7 @@ export const deleteJob = catchAsyncErrors(async (req, res, next) => {
 });
 export const getASingleJob = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
-  const job = await JobFIndById(id);
+  const job = await Job.findById(id);
   if (!job) {
     return new ErrorHandler("Job not found", 404);
   }

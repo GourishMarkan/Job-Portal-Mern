@@ -51,28 +51,28 @@ const userSlice = createSlice({
     loginFailure(state, action) {
       state.loading = false;
       state.error = action.payload;
-      state.message = null;
+      // state.message = null;
       state.isAuthenticated = false;
-      state.user = {};
+      // state.user = {};
     },
     clearAllErrors(state) {
-      state.loading = false;
+      // state.loading = false;
       state.error = null;
-      state.message = null;
-      state.user = {};
+      // state.message = null;
+      state.user = state.user;
     },
     fetchUserRequest(state) {
       state.loading = true;
       state.error = null;
-      state.message = null;
+      // state.message = null;
       state.user = {};
       state.isAuthenticated = false;
     },
     fetchUserSuccess(state, action) {
       state.loading = false;
-      state.user = action.payload;
+      state.user = action.payload.user;
       state.error = null;
-      state.message = null;
+      // state.message = null;
       state.isAuthenticated = true;
     },
     fetchUserFailed(state, action) {
@@ -88,6 +88,11 @@ const userSlice = createSlice({
     //   state.user = {};
     //   state.isAuthenticated = false;
     // },
+    setError(state, action) {
+      state.error = action.payload;
+      state.loading = false;
+    },
+
     logoutSuccess(state) {
       state.isAuthenticated = false;
       state.error = null;
@@ -108,8 +113,9 @@ export const register = (data) => async (dispatch) => {
       withCredentials: true,
       headers: { "Content-Type": "multipart/form-data" },
     });
+    console.log(response.data);
     dispatch(userSlice.actions.registerSuccess(response.data));
-    dispatch(userSlice.actions.clearAllErrors());
+    // dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(userSlice.actions.registerFailed(error.response.data.message));
   }
@@ -126,16 +132,17 @@ export const login = (data) => async (dispatch) => {
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(userSlice.actions.loginFailure(error.response.data.message));
+    // dispatch(userSlice.actions.setError(error.response.data.message));
   }
 };
 
 export const getUser = () => async (dispatch) => {
-  dispatch(userSlice.actions.fetchUserRequest());
+  // dispatch(userSlice.actions.fetchUserRequest());
   try {
     const response = await axios.get(`${BASE_URL}/user/getuser`, {
       withCredentials: true,
     });
-    dispatch(userSlice.actions.fetchUserSuccess(response.data.user));
+    dispatch(userSlice.actions.fetchUserSuccess(response.data));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(userSlice.actions.fetchUserFailed(error.response.data.message));

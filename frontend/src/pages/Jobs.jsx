@@ -89,7 +89,7 @@ const Jobs = () => {
               className="w-11/12   text-sm rounded-lg py-3 pr-32 pl-2 border border-gray-500"
             />
             <button
-              className="absolute right-7 top-[11px] bg-[#dfdf07] text-[#111] font-medium py-0.5 px-2.5 rounded-lg border-none"
+              className="absolute right-10 top-[11px] bg-[#dfdf07] text-[#111] font-medium py-0.5 px-2.5 rounded-lg border-none"
               onClick={handleSearch}
             >
               Find Job

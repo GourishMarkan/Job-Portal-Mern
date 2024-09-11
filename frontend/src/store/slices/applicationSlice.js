@@ -50,7 +50,7 @@ const applicationSlice = createSlice({
     failureForPostApplication(state, action) {
       state.error = action.payload;
       state.loading = false;
-      state.message = null;
+      // state.message = null;
     },
     requestForDeleteApplication(state) {
       state.loading = true;
@@ -129,7 +129,7 @@ export const postApplication = (data, jobId) => async (dispatch) => {
   dispatch(applicationSlice.actions.requestForPostApplication());
   try {
     const response = await axios.post(
-      `{BASE_URL}/application/post-application/${jobId}`,
+      `http://localhost:4000/api/v1/application/post-application/${jobId}`,
       data,
       {
         withCredentials: true,
@@ -141,9 +141,10 @@ export const postApplication = (data, jobId) => async (dispatch) => {
     );
     dispatch(applicationSlice.actions.clearAllErrors());
   } catch (error) {
+    // console.log(error.response);
     dispatch(
       applicationSlice.actions.failureForPostApplication(
-        error.response.data.message
+        error.response.data?.message || "An error occurred"
       )
     );
   }

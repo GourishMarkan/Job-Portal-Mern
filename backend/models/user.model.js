@@ -19,6 +19,8 @@ const userSchema = mongoose.Schema(
     phoneNumber: {
       type: Number,
       required: [true, "Please Enter Your Phone Number"],
+      min: [10, "phone number should be of 10 digits"],
+      max: [10, "phone number should be of 10 digits"],
     },
     address: {
       type: String,

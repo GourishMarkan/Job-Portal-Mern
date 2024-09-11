@@ -10,6 +10,7 @@ import PostApplication from "./pages/PostApplication";
 import Jobs from "./pages/Jobs";
 import "./App.css";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getUser } from "./store/slices/userSlice";
@@ -35,8 +36,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <ToastContainer position="top-right" theme="dark" />
         <Footer />
+        <ToastContainer position="top-right" theme="dark" />
       </Router>
     </>
   );
