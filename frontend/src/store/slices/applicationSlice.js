@@ -119,7 +119,7 @@ export const fetchJobSeekerApplications = () => async (dispatch) => {
   } catch (error) {
     dispatch(
       applicationSlice.actions.failureForMyApplications(
-        error.response.data.message
+        error.response.data?.message || "An error occurred"
       )
     );
   }

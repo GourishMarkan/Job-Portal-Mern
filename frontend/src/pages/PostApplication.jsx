@@ -48,6 +48,7 @@ const PostApplication = () => {
     }
     // console.log(formData.name);
     dispatch(postApplication(formData, jobId));
+
     // if()
   };
 
@@ -94,6 +95,7 @@ const PostApplication = () => {
     if (message) {
       console.log("message is ", message);
       toast.success(message);
+      navigateTo("/dashboard");
       dispatch(resetApplicationSlice());
     }
     dispatch(fetchSingleJob(jobId));

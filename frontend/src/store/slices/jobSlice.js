@@ -112,7 +112,11 @@ export const fetchJobs =
       dispatch(jobSlice.actions.successForAllJobs(response.data.jobs));
       dispatch(jobSlice.actions.clearAllErrors());
     } catch (error) {
-      dispatch(jobSlice.actions.failureForAllJobs(error.response.data.message));
+      dispatch(
+        jobSlice.actions.failureForAllJobs(
+          error.response.data?.message || "an error occurred"
+        )
+      );
     }
   };
 
@@ -125,7 +129,11 @@ export const fetchSingleJob = (jobId) => async (dispatch) => {
     dispatch(jobSlice.actions.successForSingleJob(response.data.job));
     dispatch(jobSlice.actions.clearAllErrors());
   } catch (error) {
-    dispatch(jobSlice.actions.failureForSingleJob(error.response.data.message));
+    dispatch(
+      jobSlice.actions.failureForSingleJob(
+        error.response.data?.message || "an error occurred"
+      )
+    );
   }
 };
 
@@ -138,7 +146,11 @@ export const postJob = (jobData) => async (dispatch) => {
     dispatch(jobSlice.actions.successForPostJob(response.data.message));
     dispatch(jobSlice.actions.clearAllErrors());
   } catch (error) {
-    dispatch(jobSlice.actions.failureForPostJob(error.response.data.message));
+    dispatch(
+      jobSlice.actions.failureForPostJob(
+        error.response.data?.message || "an error occurred"
+      )
+    );
   }
 };
 export const clearAllJobErrors = () => (dispatch) => {

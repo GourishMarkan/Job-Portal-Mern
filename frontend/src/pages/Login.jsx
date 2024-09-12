@@ -14,7 +14,7 @@ const Login = () => {
     password: "",
   });
 
-  const { loading, error, isAuthenticated } = useSelector(
+  const { loading, error, isAuthenticated, message } = useSelector(
     (state) => state.user
   );
 
@@ -39,15 +39,19 @@ const Login = () => {
       toast.error(error);
       dispatch(clearAllUserErrors());
     }
+    if (message) {
+      toast.success(message);
+    }
     if (isAuthenticated) {
       navigateTo("/");
     }
   }, [dispatch, error, loading, isAuthenticated]);
   return (
     <>
-      <section className="flex mx-auto min-h-screen min-w-[1500px] max-w-[1500px]  sm:min-w-full">
-        <div className="flex-1 flex flex-col justify-center bg-[#fff] py-5 px-5 m-w-[1500px]">
+      <section className="flex mx-auto min-h-screen justify-center min-w-[1500px] max-w-[1500px]  sm:min-w-full">
+        <div className="flex-1 flex flex-col  items-center justify-center bg-[#fff] py-5 px-5 max-w-md">
           <div className="flex gap-3 flex-col text-center mb-7">
+            {error && <div className="text-red-500 text-lg">{error}</div>}
             <h3 className="text-2xl">Login to your account</h3>
           </div>
           <form className="flex flex-col gap-5" onSubmit={handleLogin}>
@@ -66,7 +70,7 @@ const Login = () => {
                   <option value="Employer">Register as an Employer</option>
                   <option value="Job Seeker">Register as a Job Seeker</option>
                 </select>
-                <FaRegUser className="w-2/12 text-2xl bg-[#dfdf07] h-10 p-2 text-[#fff]" />
+                <FaRegUser className="w-2/12 text-xl bg-[#dfdf07] h-[37px] p-2 text-[#fff]" />
               </div>
             </div>
             <div className="flex flex-col gap-2 flex-1">
@@ -86,7 +90,7 @@ const Login = () => {
               </div>
             </div>
             <div className="flex flex-col gap-2 flex-1">
-              <label htmlFor="password">Email</label>
+              <label htmlFor="password">Password</label>
               <div className="flex items-center rounded-lg">
                 <input
                   type="password"

@@ -105,7 +105,21 @@ const userSlice = createSlice({
     },
   },
 });
-
+export const {
+  loginRequest,
+  loginSuccess,
+  loginFailure,
+  registerRequest,
+  registerSuccess,
+  registerFailed,
+  fetchUserRequest,
+  fetchUserSuccess,
+  fetchUserFailed,
+  logoutSuccess,
+  logoutFailed,
+  clearAllErrors,
+  setError,
+} = userSlice.actions;
 export const register = (data) => async (dispatch) => {
   dispatch(userSlice.actions.registerRequest());
   try {
@@ -127,12 +141,12 @@ export const login = (data) => async (dispatch) => {
       withCredentials: true,
       headers: { "Content-Type": "application/json" },
     });
-
+    console.log(response.data);
     dispatch(userSlice.actions.loginSuccess(response.data));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
-    dispatch(userSlice.actions.loginFailure(error.response.data.message));
-    // dispatch(userSlice.actions.setError(error.response.data.message));
+    dispatch(userSlice.actions.loginFailure(error.response.data));
+    // dispatch(userSlice.actions.setError(error.response.data));
   }
 };
 
