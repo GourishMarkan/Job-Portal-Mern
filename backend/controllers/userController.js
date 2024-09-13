@@ -25,7 +25,11 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
     }
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return next(new ErrorHandler("User already exists", 400));
+      // return next(new ErrorHandler("User already exists", 400));
+      return res.status(400).json({
+        success: false,
+        message: "User already exists",
+      });
     }
     const userData = {
       name,
@@ -53,9 +57,13 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
             }
           );
           if (!cloudinaryResponse || cloudinaryResponse.error) {
-            return next(
-              new ErrorHandler("Failed to upload resume to cloud.", 500)
-            );
+            // return next(
+            //   new ErrorHandler("Failed to upload resume to cloud.", 500)
+            // );
+            return res.status(500).json({
+              success: false,
+              message: "Failed to upload resume to cloudinary",
+            });
           }
 
           userData.resume = {
@@ -78,26 +86,46 @@ export const registerUser = catchAsyncErrors(async (req, res, next) => {
     });
   } catch (e) {
     console.log("Error in registerUser", e.message);
+    return res.status(400).json({
+      success: false,
+      message: " error is ${e.message}",
+    });
   }
 });
 
 export const loginUser = catchAsyncErrors(async (req, res, next) => {
   const { role, email, password } = req.body;
   if (!email || !password || !role) {
-    return next(new ErrorHandler("role, email and password are required", 400));
+    // return next(new ErrorHandler("role, email and password are required", 400));
+    return res.status(400).json({
+      success: false,
+      message: "role, email and password are required",
+    });
   }
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
-    return next(new ErrorHandler("Invalid email or password", 400));
+    // return next(new ErrorHandler("Invalid email or password", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email or password",
+    });
   }
 
   const isPasswordMatched = await user.comparePassword(password);
   if (!isPasswordMatched) {
-    return next(new ErrorHandler("Invalid  password", 400));
+    // return next(new ErrorHandler("Invalid  password", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Invalid password",
+    });
   }
   if (role != user.role) {
-    return next(new ErrorHandler("Invalid role", 400));
+    // return next(new ErrorHandler("Invalid role", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Invalid role",
+    });
   }
 
   sendToken(user, 200, res, "User logged in successfully");
@@ -121,7 +149,11 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
 export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user._id);
   if (!user) {
-    return next(new ErrorHandler("User not found", 404));
+    // return next(new ErrorHandler("User not found", 404));
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
   }
   res.status(200).json({
     success: true,
@@ -158,7 +190,11 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
     req.user.role === "JobSeeker" &&
     (!firstNiche || !secondNiche || !thirdNiche)
   ) {
-    return next(new ErrorHandler("Please provide all the niches", 400));
+    // return next(new ErrorHandler("Please provide all the niches", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Please provide all the niches",
+    });
   }
 
   if (req.files && req.files.resume) {
@@ -169,7 +205,11 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
         try {
           await cloudinary.uploader.destroy(currentResume);
         } catch (e) {
-          return next(new ErrorHandler("Failed to delete pre resume", 500));
+          // return next(new ErrorHandler("Failed to delete pre resume", 500));
+          return res.status(500).json({
+            success: false,
+            message: "Failed to delete pre resume",
+          });
         }
       }
       const newResume = await cloudinary.uploader.upload(resume.tempFilePath, {
@@ -197,18 +237,30 @@ export const updateProfile = catchAsyncErrors(async (req, res, next) => {
 export const updatePassword = catchAsyncErrors(async (req, res, next) => {
   const { oldPassword, newPassword, confirmPassword } = req.body;
   if (!oldPassword || !newPassword || !confirmPassword) {
-    return next(new ErrorHandler("Please fill all the fields", 400));
+    // return next(new ErrorHandler("Please fill all the fields", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Please fill all the fields",
+    });
   }
 
   const user = await User.findById(req.user.id).select("+password");
 
   const isPasswordCorrect = await user.comparePassword(oldPassword);
   if (!isPasswordCorrect) {
-    return next(new ErrorHandler("Old password is incorrect", 400));
+    // return next(new ErrorHandler("Old password is incorrect", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Old password is incorrect",
+    });
   }
 
   if (newPassword != confirmPassword) {
-    return next(new ErrorHandler("Password does not match", 400));
+    // return next(new ErrorHandler("Password does not match", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Password does not match",
+    });
   }
 
   user.password = newPassword;
@@ -221,7 +273,11 @@ export const updateResume = catchAsyncErrors(async (req, res, next) => {
     const { resume } = req.files;
     console.log("resume", resume);
     if (!resume) {
-      return next(new ErrorHandler("Please upload a resume", 400));
+      // return next(new ErrorHandler("Please upload a resume", 400));
+      return res.status(400).json({
+        success: false,
+        message: "Please upload a resume",
+      });
     }
     const currentResumeId = req.user.resume.public_id;
     console.log("currentResume", currentResumeId);
@@ -229,7 +285,11 @@ export const updateResume = catchAsyncErrors(async (req, res, next) => {
       try {
         await cloudinary.uploader.destroy(currentResumeId);
       } catch (e) {
-        return next(new ErrorHandler("Failed to delete pre resume", 500));
+        // return next(new ErrorHandler("Failed to delete pre resume", 500));
+        return res.status(500).json({
+          success: false,
+          message: "Failed to delete pre resume",
+        });
       }
     }
     const newResume = await cloudinary.uploader.upload(resume.tempFilePath, {

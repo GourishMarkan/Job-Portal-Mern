@@ -30,19 +30,28 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
     !salary ||
     !jobNiche
   ) {
-    return next(new ErrorHandler("Please provide full job details.", 400));
+    // return next(new ErrorHandler("Please provide full job details.", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Please provide full job details",
+    });
   }
 
   if (
     (personalWebsiteTitle && !personalWebsiteUrl) ||
     (!personalWebsiteTitle && personalWebsiteUrl)
   ) {
-    return next(
-      new ErrorHandler(
+    // return next(
+    //   new ErrorHandler(
+    //     "Please provide both personal website url and title, or leave both blank",
+    //     400
+    //   )
+    // );
+    return res.status(400).json({
+      success: false,
+      message:
         "Please provide both personal website url and title, or leave both blank",
-        400
-      )
-    );
+    });
   }
 
   const postedBy = req.user._id;
@@ -68,7 +77,11 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
   });
 
   if (!job) {
-    return next(new ErrorHandler("Failed to post job.", 400));
+    // return next(new ErrorHandler("Failed to post job.", 400));
+    return res.status(400).json({
+      success: false,
+      message: "Failed to post job",
+    });
   }
   res.status(200).json({
     succes: true,
@@ -113,7 +126,11 @@ export const deleteJob = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const job = await Job.findById(id);
   if (!job) {
-    return new ErrorHandler("Job not found", 404);
+    // return new ErrorHandler("Job not found", 404);
+    return res.status(404).json({
+      success: false,
+      message: "Job not found",
+    });
   }
   await job.deleteOne();
   res.status(200).json({
@@ -125,7 +142,11 @@ export const getASingleJob = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const job = await Job.findById(id);
   if (!job) {
-    return new ErrorHandler("Job not found", 404);
+    // return new ErrorHandler("Job not found", 404);
+    return res.status(404).json({
+      success: false,
+      message: "Job not found",
+    });
   }
   res.status(200).json({
     success: true,

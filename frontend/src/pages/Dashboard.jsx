@@ -15,7 +15,7 @@ const Dashboard = () => {
     (state) => state.user
   );
   const [show, setShow] = useState(false);
-  const [component, setComponent] = useState("My profile");
+  const [componentName, setComponentName] = useState("My Profile");
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
   const handleLogout = () => {
@@ -33,33 +33,23 @@ const Dashboard = () => {
   }, [dispatch, error, loading, isAuthenticated]);
   return (
     <>
-      <section className="px-10 py-16 min-h-[800px]">
-        <div className="lex justify-between items-center mb-8">
-          <p className="font-medium text-gray-900">Dashboard</p>
-          <p className="font-medium">
-            Welcome!{" "}
-            <span className="text-yellow-400">{user && user.name}</span>
+      <section className="account">
+        <div className="component_header">
+          <p>Dashboard</p>
+          <p>
+            Welcome! <span>{user && user.name}</span>
           </p>
         </div>
-        <div className="flex">
-          <div
-            className={`${
-              show
-                ? "absolute left-0 top-0 h-full z-10 bg-gray-900 w-72 p-5"
-                : "hidden"
-            } md:block`}
-          >
-            <ul className="flex flex-col gap-6">
-              <h4 className="font-semibold tracking-wide text-xl mb-5">
-                Manage Account
-              </h4>
+        <div className="container">
+          <div className={show ? "sidebar showSidebar" : "sidebar"}>
+            <ul className="sidebar_links">
+              <h4>Manage Account</h4>
               <li>
                 <button
                   onClick={() => {
-                    setComponent("My Profile");
+                    setComponentName("My Profile");
                     setShow(!show);
                   }}
-                  className="text-gray-500 hover:text-yellow-400 transition duration-300"
                 >
                   My Profile
                 </button>
@@ -67,10 +57,9 @@ const Dashboard = () => {
               <li>
                 <button
                   onClick={() => {
-                    setComponent("Update Profile");
+                    setComponentName("Update Profile");
                     setShow(!show);
                   }}
-                  className="text-gray-500 hover:text-yellow-400 transition duration-300"
                 >
                   Update Profile
                 </button>
@@ -78,33 +67,21 @@ const Dashboard = () => {
               <li>
                 <button
                   onClick={() => {
-                    setComponent("Update Password");
+                    setComponentName("Update Password");
                     setShow(!show);
                   }}
-                  className="text-gray-500 hover:text-yellow-400 transition duration-300"
                 >
                   Update Password
                 </button>
               </li>
-              <li>
-                <button
-                  onClick={() => {
-                    setComponent("Update Password");
-                    setShow(!show);
-                  }}
-                  className="text-gray-500 hover:text-yellow-400 transition duration-300"
-                >
-                  Update Password
-                </button>
-              </li>
+
               {user && user.role === "Employer" && (
                 <li>
                   <button
                     onClick={() => {
-                      setComponent("Job Post");
+                      setComponentName("Job Post");
                       setShow(!show);
                     }}
-                    className="text-gray-500 hover:text-yellow-400 transition duration-300"
                   >
                     Post New Job
                   </button>
@@ -114,10 +91,9 @@ const Dashboard = () => {
                 <li>
                   <button
                     onClick={() => {
-                      setComponent("My Jobs");
+                      setComponentName("My Jobs");
                       setShow(!show);
                     }}
-                    className="text-gray-500 hover:text-yellow-400 transition duration-300"
                   >
                     My Jobs
                   </button>
@@ -127,10 +103,9 @@ const Dashboard = () => {
                 <li>
                   <button
                     onClick={() => {
-                      setComponent("Applications");
+                      setComponentName("Applications");
                       setShow(!show);
                     }}
-                    className="text-gray-500 hover:text-yellow-400 transition duration-300"
                   >
                     Applications
                   </button>
@@ -140,63 +115,59 @@ const Dashboard = () => {
                 <li>
                   <button
                     onClick={() => {
-                      setComponent("My Applications");
+                      setComponentName("My Applications");
                       setShow(!show);
                     }}
-                    className="text-gray-500 hover:text-yellow-400 transition duration-300"
                   >
                     My Applications
                   </button>
                 </li>
               )}
               <li>
-                <button
-                  onClick={handleLogout}
-                  className="text-gray-500 hover:text-yellow-400 transition duration-300"
-                >
-                  Logout
-                </button>
+                <button onClick={handleLogout}>Logout</button>
               </li>
             </ul>
           </div>
-          <div className="flex-grow max-w-4xl mx-auto relative">
+          <div className="banner">
             <div
-              className={`${
-                show ? "left-72 bg-white" : "left-0"
-              } absolute transition-all duration-300`}
+              className={
+                show ? "sidebar_icon move_right" : "sidebar_icon move_left"
+              }
             >
               <LuMoveRight
                 onClick={() => setShow(!show)}
-                className={`${
-                  show ? "left-72 bg-white" : "left-0"
-                } absolute transition-all duration-300`}
+                className={show ? "left_arrow" : "right_arrow"}
               />
             </div>
-            {() => {
-              switch (component) {
+            {(() => {
+              switch (componentName) {
                 case "My Profile":
                   return <MyProfile />;
-
+                  break;
                 case "Update Profile":
                   return <UpdateProfile />;
-
+                  break;
                 case "Update Password":
                   return <UpdatePassword />;
-
+                  break;
                 case "Job Post":
                   return <JobPost />;
-
+                  break;
+                case "My Jobs":
+                  return <MyJobs />;
+                  break;
                 case "Applications":
                   return <Applications />;
-
+                  break;
                 case "My Applications":
                   return <MyApplications />;
+                  break;
 
                 default:
                   <MyProfile />;
                   break;
               }
-            }}
+            })()}
           </div>
         </div>
       </section>

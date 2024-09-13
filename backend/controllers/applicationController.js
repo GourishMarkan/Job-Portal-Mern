@@ -23,7 +23,11 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
 
   const jobDetails = await Job.findById(id);
   if (!jobDetails) {
-    return next(new ErrorHandler("Job not found", 404));
+    // return next(new ErrorHandler("Job not found", 404));
+    return res.status(404).json({
+      success: false,
+      message: "Job not found",
+    });
   }
 
   const isAlreadyApplied = await Application.findOne({
@@ -32,7 +36,11 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
   });
 
   if (isAlreadyApplied) {
-    return next(new ErrorHandler("You have already applied for this job", 400));
+    // return next(new ErrorHandler("You have already applied for this job", 400));
+    return res.status(400).json({
+      success: false,
+      message: "You have already applied for this job",
+    });
   }
 
   if (req.files && req.files.resume) {
@@ -45,22 +53,34 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
         }
       );
       if (!cloudinaryResponse || cloudinaryResponse.error) {
-        return next(
-          new ErrorHandler("Failed to upload resume to cloudinary.", 500)
-        );
+        // return next(
+        //   new ErrorHandler("Failed to upload resume to cloudinary.", 500)
+        // );
+        return res.status(500).json({
+          success: false,
+          message: "Failed to upload resume to cloudinary",
+        });
       }
       jobSeekerInfo.resume = {
         public_id: cloudinaryResponse.public_id,
         url: cloudinaryResponse.secure_url,
       };
     } catch (error) {
-      return next(
-        new ErrorHandler(`Error in uploading resume ${error.message}`, 500)
-      );
+      // return next(
+      //   new ErrorHandler(`Error in uploading resume ${error.message}`, 500)
+      // );
+      return res.status(500).json({
+        success: false,
+        message: `Error in uploading resume ${error.message}`,
+      });
     }
   } else {
     if (req.user && !req.user.resume.url) {
-      return next(new ErrorHandler("Please upload your resume", 400));
+      // return next(new ErrorHandler("Please upload your resume", 400));
+      return res.status(400).json({
+        success: false,
+        message: "Please upload your resume",
+      });
     }
     jobSeekerInfo.resume = {
       public_id: req.user.resume.public_id,
@@ -125,7 +145,11 @@ export const deleteApplication = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
   const application = await Application.findById(id);
   if (!application) {
-    return new ErrorHandler("Application not found", 404);
+    // return new ErrorHandler("Application not found", 404);
+    return res.status(404).json({
+      success: false,
+      message: "Application not found",
+    });
   }
   const role = req.user.role;
   switch (role) {
