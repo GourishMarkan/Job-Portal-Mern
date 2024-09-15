@@ -92,7 +92,7 @@ const Register = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      // dispatch(clearAllUserErrors());
+      dispatch(clearAllUserErrors());
     }
     if (isAuthenticated) {
       navigateTo("/");

@@ -83,9 +83,13 @@ const applicationSlice = createSlice({
 export const fetchEmployerApplications = () => async (dispatch) => {
   dispatch(applicationSlice.actions.requestForAllApplications());
   try {
-    const response = await axios.get(`{BASE_URL}/application/employer/getall`, {
-      withCredentials: true,
-    });
+    console.log("base url is ", BASE_URL);
+    const response = await axios.get(
+      `http://localhost:4000/api/v1/application/employer/getall`,
+      {
+        withCredentials: true,
+      }
+    );
     dispatch(
       applicationSlice.actions.successForAllApplications(
         response.data.applications
@@ -104,8 +108,9 @@ export const fetchEmployerApplications = () => async (dispatch) => {
 export const fetchJobSeekerApplications = () => async (dispatch) => {
   dispatch(applicationSlice.actions.requestForMyApplications());
   try {
+    console.log("base url is ", BASE_URL);
     const response = await axios.get(
-      `{BASE_URL}/application/jobSeeker/getall`,
+      ` http://localhost:4000/api/v1/application/jobseeker/getall`,
       {
         withCredentials: true,
       }

@@ -8,21 +8,21 @@ import {
 import { toast } from "react-toastify";
 import { getUser } from "../store/slices/userSlice";
 const UpdateProfile = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const { loading, error, isUpdated } = useSelector(
     (state) => state.updateProfile
   );
   const [userDetails, setuserDetails] = React.useState({
     name: user?.name || "",
     email: user?.email || "",
-    firstNiche: user?.firstNiche || "",
-    secondNiche: user?.secondNiche || "",
-    thirdNiche: user?.thirdNiche || "",
+    firstNiche: user.niches?.firstNiche || "",
+    secondNiche: user.niches?.secondNiche || "",
+    thirdNiche: user.niches?.thirdNiche || "",
     coverLetter: user?.coverLetter || "",
-    phoneNumber: user?.phoneNumber || "",
+    phoneNumber: user?.phoneNumber || 0,
     address: user?.address || "",
     role: user?.role || "",
-    resume: (user && user?.resume.url) || "",
+    resume: (user && user?.resume?.url) || "",
     resumePreview: null,
   });
   const handleInputChange = (e) => {
@@ -38,7 +38,7 @@ const UpdateProfile = () => {
     formData.append("email", userDetails.email);
     formData.append("phoneNumber", userDetails.phoneNumber);
     formData.append("address", userDetails.address);
-    if (user & (user.role === "Job Seeker")) {
+    if (user && user.role === "Job Seeker") {
       formData.append("firstNiche", userDetails.firstNiche);
       formData.append("secondNiche", userDetails.secondNiche);
       formData.append("thirdNiche", userDetails.thirdNiche);
@@ -52,7 +52,7 @@ const UpdateProfile = () => {
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onloadend = () => {
+    reader.onload = () => {
       setuserDetails({
         ...userDetails,
         resume: file,
@@ -61,16 +61,22 @@ const UpdateProfile = () => {
     };
   };
   useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
+  useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearAllUpdateProfileErrors());
+    }
+    if (!isAuthenticated) {
+      navigateTo("/");
     }
     if (isUpdated) {
       toast.success("Profile updated successfully");
       dispatch(getUser());
       dispatch(clearAllUpdateProfileErrors());
     }
-  }, [dispatch, error, loading, isUpdated, user]);
+  }, [dispatch, error, loading, isUpdated, user, isAuthenticated]);
   const nichesArray = [
     "Software Development",
     "Web Development",
@@ -140,20 +146,20 @@ const UpdateProfile = () => {
             </label>
             <div className="flex flex-col gap-3.5">
               <select
+                name="firstNiche"
                 className="py-2 px-1 bg-[#8080805e] border-none text-[#555]"
-                onChange={handleInputChange}
                 value={userDetails.firstNiche}
+                onChange={handleInputChange}
               >
-                {nichesArray.map((niche, index) => {
-                  return (
-                    <option value={niche} key={index}>
-                      {niche}
-                    </option>
-                  );
-                })}
+                {nichesArray.map((niche, index) => (
+                  <option value={niche} key={index}>
+                    {niche}
+                  </option>
+                ))}
               </select>
               <select
                 className="py-2 px-1 bg-[#8080805e] border-none text-[#555]"
+                name="secondNiche"
                 onChange={handleInputChange}
                 value={userDetails.secondNiche}
               >
@@ -167,6 +173,7 @@ const UpdateProfile = () => {
               </select>
               <select
                 className="py-2 px-1 bg-[#8080805e] border-none text-[#555]"
+                name="thirdNiche"
                 onChange={handleInputChange}
                 value={userDetails.thirdNiche}
               >
@@ -180,25 +187,26 @@ const UpdateProfile = () => {
               </select>
             </div>
             <div className="flex flex-col gap-2 relative">
-              <label htmlFor="phone" className="text-3xl font-medium">
+              <label htmlFor="phoneNumber" className="text-3xl font-medium">
                 Phone Number
               </label>
 
               <input
-                type="text"
-                name="phone"
+                type="number"
+                name="phoneNumber"
                 className="py-2 px-1 bg-[#8080805e] border-none text-[#555]"
                 onChange={handleInputChange}
                 value={userDetails.phoneNumber}
               />
             </div>
             <div className="flex flex-col gap-2 relative">
-              <label htmlFor="" className="text-3xl font-medium">
+              <label htmlFor="address" className="text-3xl font-medium">
                 Address
               </label>
 
               <input
                 type="text"
+                name="address"
                 className="py-2 px-1 bg-[#8080805e] border-none text-[#555]"
                 onChange={handleInputChange}
                 value={userDetails.address}
@@ -233,7 +241,7 @@ const UpdateProfile = () => {
             </div>
             <div className="flex flex-col gap-2 relative">
               <label htmlFor="" className="text-3xl font-medium">
-                Upload Resume
+                Update Resume
               </label>
 
               <input
@@ -253,11 +261,11 @@ const UpdateProfile = () => {
                   </Link>
                 </div>
               )}
-              <div className="flex-row justify-end items-center">
+              <div className="flex-row justify-self-end items-end">
                 <button
-                  className="w-fit border-none bg-[#111] text-[#fff] py-2 px-5 text-xl rounded-lg hover:bg-yellow-400 transition-colors duration-300"
+                  className="w-fit border-none bg-[#111] text-[#fff] py-2 px-5 text-xl rounded-lg ml-40 hover:bg-yellow-400 transition-colors duration-300"
                   onClick={handleUpdateProfile}
-                  // disabled={loading}
+                  disabled={loading}
                 >
                   Save Changes
                 </button>

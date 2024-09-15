@@ -67,8 +67,8 @@ const Login = () => {
                   }}
                 >
                   <option value="">Select Role</option>
-                  <option value="Employer">Register as an Employer</option>
-                  <option value="Job Seeker">Register as a Job Seeker</option>
+                  <option value="Employer">Login as an Employer</option>
+                  <option value="Job Seeker">Login as a Job Seeker</option>
                 </select>
                 <FaRegUser className="w-2/12 text-xl bg-[#dfdf07] h-[37px] p-2 text-[#fff]" />
               </div>

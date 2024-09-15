@@ -10,8 +10,9 @@ import UpdatePassword from "../components/UpdatePassword";
 import JobPost from "../components/JobPost";
 import Applications from "../components/Applications";
 import MyApplications from "../components/MyApplications";
+import MyJobs from "../components/MyJobs";
 const Dashboard = () => {
-  const { isAuthenticated, user, message, error, loading } = useSelector(
+  const { isAuthenticated, user, error, loading } = useSelector(
     (state) => state.user
   );
   const [show, setShow] = useState(false);
@@ -143,25 +144,24 @@ const Dashboard = () => {
               switch (componentName) {
                 case "My Profile":
                   return <MyProfile />;
-                  break;
+
                 case "Update Profile":
                   return <UpdateProfile />;
-                  break;
+
                 case "Update Password":
                   return <UpdatePassword />;
-                  break;
+
                 case "Job Post":
                   return <JobPost />;
-                  break;
+
                 case "My Jobs":
                   return <MyJobs />;
-                  break;
+
                 case "Applications":
                   return <Applications />;
-                  break;
+
                 case "My Applications":
                   return <MyApplications />;
-                  break;
 
                 default:
                   <MyProfile />;

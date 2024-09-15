@@ -46,6 +46,8 @@ export const updateProfile = (data) => async (dispatch) => {
   dispatch(updateProfileSlice.actions.updateProfileRequest());
   try {
     const response = await axios.put(`${BASE_URL}/user/update-profile`, data, {
+      withCredentials: true,
+
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -62,13 +64,14 @@ export const updateProfile = (data) => async (dispatch) => {
 };
 
 export const updatePassword = (data) => async (dispatch) => {
-  dispatch(updateProfileSlice.actions.updatePasswordRequest());
+  dispatch(updateProfileSlice.actions.updatePassswordRequest());
   try {
     const response = await axios.put(`${BASE_URL}/user/update-password`, data, {
       withCredentials: true,
       headers: { "Content-Type": "appication/json" },
     });
     console.log(response);
+    dispatch(updateProfileSlice.actions.updatePasswordSuccess());
   } catch (error) {
     dispatch(
       updateProfileSlice.actions.updatePasswordFail(
