@@ -145,7 +145,7 @@ export const login = (data) => async (dispatch) => {
     dispatch(userSlice.actions.loginSuccess(response.data));
     dispatch(userSlice.actions.clearAllErrors());
   } catch (error) {
-    dispatch(userSlice.actions.loginFailure(error.response.data));
+    dispatch(userSlice.actions.loginFailure(error.response.data.message));
     // dispatch(userSlice.actions.setError(error.response.data));
   }
 };

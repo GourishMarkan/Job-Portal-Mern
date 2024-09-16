@@ -9,7 +9,6 @@ import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
 const MyApplications = () => {
-  const { user, isAuthenticated } = useSelector((state) => state.user);
   const { loading, error, applications, message } = useSelector(
     (state) => state.applications
   );
