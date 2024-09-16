@@ -1,3 +1,4 @@
+/* eslint-disable no-self-assign */
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "../../config/url";
@@ -58,6 +59,7 @@ const jobSlice = createSlice({
     requestForDeleteJob(state) {
       state.loading = true;
       state.error = null;
+      state.message = null;
     },
     successForDeleteJob(state, action) {
       state.loading = false;
@@ -73,6 +75,7 @@ const jobSlice = createSlice({
     requestForMyJobs(state) {
       state.loading = true;
       state.error = null;
+      state.jobs = [];
     },
     successForMyJobs(state, action) {
       state.loading = false;
@@ -81,10 +84,20 @@ const jobSlice = createSlice({
     },
     failureForMyJobs(state, action) {
       state.loading = false;
+      state.myJobs = state.myJobs;
       state.error = action.payload;
     },
     clearAllErrors(state) {
       state.error = null;
+      state.jobs = state.jobs;
+    },
+    resetJobSlice(state) {
+      state.error = null;
+      state.jobs = state.jobs;
+      state.loading = false;
+      state.message = null;
+      state.myJobs = state.myJobs;
+      state.singleJob = {};
     },
   },
 });
@@ -149,6 +162,39 @@ export const postJob = (jobData) => async (dispatch) => {
     dispatch(
       jobSlice.actions.failureForPostJob(
         error.response.data?.message || "an error occurred"
+      )
+    );
+  }
+};
+export const getMyJobs = () => async (dispatch) => {
+  dispatch(jobSlice.actions.requestForMyJobs());
+  try {
+    const response = await axios.get(`${BASE_URL}/job/getmyjobs`, {
+      withCredentials: true,
+    });
+    // console.log(response.data.message);
+    dispatch(jobSlice.actions.successForMyJobs(response.data.myJobs));
+    dispatch(jobSlice.actions.clearAllErrors());
+  } catch (error) {
+    dispatch(
+      jobSlice.actions.failureForMyJobs(
+        error.response.data?.message || "an error occured"
+      )
+    );
+  }
+};
+export const deleteJob = (id) => async (dispatch) => {
+  dispatch(jobSlice.actions.requestForDeleteJob());
+  try {
+    const response = await axios.get(`${BASE_URL}/job/delete/${id}`, {
+      withCredentials: true,
+    });
+    dispatch(jobSlice.actions.successForDeleteJob(response.data.message));
+    dispatch(jobSlice.actions.clearAllErrors());
+  } catch (error) {
+    dispatch(
+      jobSlice.actions.failureForDeleteJob(
+        error.response.data?.message || "an error occured"
       )
     );
   }

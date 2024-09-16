@@ -10,7 +10,7 @@ const Navbar = () => {
   return (
     <nav
       className={`${
-        show ? "h-52" : "h-20"
+        show ? "h-30" : "h-20"
       } flex justify-between border-b border-gray-500 px-8 py-4 items-center transition-height duration-300`}
     >
       <div className="flex items-center gap-8">
