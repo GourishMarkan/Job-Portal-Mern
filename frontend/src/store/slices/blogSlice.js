@@ -11,6 +11,7 @@ const blogsSlice = createSlice({
     error: null,
     message: null,
     singleBlog: {},
+    myBlogs: {},
   },
   reducers: {
     requestForAllBlogs(state) {
@@ -39,6 +40,21 @@ const blogsSlice = createSlice({
       state.error = null;
     },
     failureForSingleBlog(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+      state.message = null;
+    },
+    requestForMyBlogs(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    successForMyBlog(state, action) {
+      state.loading = false;
+      state.myBlogs = action.payload.blogs;
+      state.message = action.payload.message;
+      state.error = null;
+    },
+    failureForMyBlog(state, action) {
       state.loading = false;
       state.error = action.payload;
       state.message = null;
@@ -150,6 +166,21 @@ export const fetchSingleBlog = (id) => async (dispatch) => {
       blogsSlice.actions.failureForSingleBlog(
         error.response.data?.message || "Something went wrong"
       )
+    );
+  }
+};
+
+export const fetchMyBlogs = () => async (dispatch) => {
+  dispatch(blogsSlice.actions.requestForMyBlogs());
+  try {
+    const response = await axios.get(`${BASE_URL}/blog/myBlogs`, {
+      withCredentials: true,
+    });
+    dispatch(blogsSlice.actions.successForMyBlog(response.data));
+  } catch (error) {
+    dispatch(
+      blogsSlice.actions.failureForMyBlog(error.response.data?.message) ||
+        "Something went wrong"
     );
   }
 };

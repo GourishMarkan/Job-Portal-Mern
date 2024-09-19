@@ -76,7 +76,28 @@ export const getAllBlogs = async (req, res) => {
     });
   }
 };
-
+export const getBlogsByUserId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const blogs = await Blog.find({ author: id }).sort({ createdAt: -1 });
+    if (!blogs) {
+      return res.status(404).json({
+        success: false,
+        message: "No blogs found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      blogs,
+      message: "All blogs fetched successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 export const getBlogById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -110,27 +131,56 @@ export const updateBlog = async (req, res) => {
         message: "Blog not found",
       });
     }
-    const response = await cloudinary.uploader.upload(
-      req.files.image.tempFilePath,
-      {
-        folder: "Blogs",
-      }
-    );
+    // const response = await cloudinary.uploader.upload(
+    //   req.files.image.tempFilePath,
+    //   {
+    //     folder: "Blogs",
+    //   }
+    // );
     blog.title = req.body.title || blog.title;
+    blog.heading = req.body.heading || blog.heading;
     blog.description = req.body.description || blog.description;
     blog.content = req.body.content || blog.content;
     blog.category = req.body.category || blog.category;
-    blog.image = {
-      public_id: response.public_id || blog.image.public_id,
-      url: response.secure_url || blog.image.url,
-    };
-    const updatedBlog = await blog.save();
+    let updatedImage = {};
+    // let response
+    if (req.files && req.files.image) {
+      const { image } = req.files;
+      if (image) {
+        try {
+          // delete the previous image
+          const prev = await cloudinary.uploader.destroy(blog.image.public_id);
+          const cloudinaryResponse = await cloudinary.uploader.upload(
+            image.tempFilePath,
+            {
+              folder: "Blogs",
+            }
+          );
+          updatedImage = {
+            public_id: cloudinaryResponse.public_id,
+            url: cloudinaryResponse.secure_url,
+          };
+        } catch (error) {
+          return res.status(500).json({
+            success: false,
+            message: "Failed to update image",
+          });
+        }
+      }
+    }
+
+    console.log(blog.image);
+    blog.image = updatedImage || blog.image;
+    console.log(blog.image);
+    await blog.save();
+
     return res.status(200).json({
       success: true,
       message: "Blog updated successfully",
-      updatedBlog,
+      blog,
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({
       success: false,
       message: error.message,

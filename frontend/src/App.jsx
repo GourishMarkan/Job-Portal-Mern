@@ -15,6 +15,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getUser } from "./store/slices/userSlice";
 import CreateBlog from "./components/createBlog";
+import AllBlogs from "./pages/AllBlogs";
 function App() {
   const dispatch = useDispatch();
 
@@ -36,7 +37,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="create-blog" element={<CreateBlog />} />
+          <Route path="dashboard/create-blog" element={<CreateBlog />} />
+          <Route path="blogs" element={<AllBlogs />} />
         </Routes>
         <Footer />
         <ToastContainer position="top-right" theme="dark" />

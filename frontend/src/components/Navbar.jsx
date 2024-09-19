@@ -37,6 +37,15 @@ const Navbar = () => {
           </li>
           <li className="list-none">
             <Link
+              to={"/blogs"}
+              className="text-gray-700 hover:text-yellow-400 transition-colors duration-300"
+              onClick={() => setShow(!show)}
+            >
+              BLOGS
+            </Link>
+          </li>
+          <li className="list-none">
+            <Link
               to={"/jobs"}
               className="text-gray-700 hover:text-yellow-400 transition-colors duration-300"
               onClick={() => setShow(!show)}
