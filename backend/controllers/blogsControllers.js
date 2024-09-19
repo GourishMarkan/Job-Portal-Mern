@@ -3,7 +3,7 @@ import { Blog } from "../models/blog.model.js";
 import { v2 as cloudinary } from "cloudinary";
 
 export const postBlog = catchAsyncErrors(async (req, res, next) => {
-  const { title, description, content, category, image } = req.body;
+  const { title, description, content, category, heading, image } = req.body;
 
   if (!title || !description || !content || !category) {
     return res.status(400).json({
@@ -16,8 +16,10 @@ export const postBlog = catchAsyncErrors(async (req, res, next) => {
     description,
     content,
     category,
+    heading,
     author: req.user._id,
     // createdAt,
+    // postedAt: createdAt,
   };
   if (req.files && req.files.image) {
     const { image } = req.files;
@@ -51,7 +53,7 @@ export const postBlog = catchAsyncErrors(async (req, res, next) => {
     }
   }
   const blog = await Blog.create(blogData);
-
+  console.log(blog.createdAt);
   return res.status(200).json({
     success: true,
     message: "Blog created successfully",
@@ -65,6 +67,7 @@ export const getAllBlogs = async (req, res) => {
     return res.status(200).json({
       success: true,
       blogs,
+      message: "All blogs fetched successfully",
     });
   } catch (error) {
     return res.status(500).json({
@@ -87,6 +90,7 @@ export const getBlogById = async (req, res) => {
     return res.status(200).json({
       success: true,
       blog,
+      message: "Blog found",
     });
   } catch (error) {
     return res.status(500).json({
@@ -134,10 +138,10 @@ export const updateBlog = async (req, res) => {
   }
 };
 
-export const deleteBlog = async (res, req) => {
+export const deleteBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const blog = await Blog.findByIdAndRemove(id);
+    const blog = await Blog.findByIdAndDelete(id);
     if (!blog) {
       return res.status(404).json({
         success: false,
