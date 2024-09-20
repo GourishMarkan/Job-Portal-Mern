@@ -11,7 +11,7 @@ const blogsSlice = createSlice({
     error: null,
     message: null,
     singleBlog: {},
-    myBlogs: {},
+    myBlogs: [],
   },
   reducers: {
     requestForAllBlogs(state) {
@@ -95,6 +95,7 @@ const blogsSlice = createSlice({
     successForUpdateBlog(state, action) {
       state.loading = false;
       state.singleBlog = action.payload.blog;
+      state.message = action.payload.message;
       state.error = null;
     },
     failureForUpdateBlog(state, action) {
@@ -157,7 +158,7 @@ export const fetchAllBlogs = () => async (dispatch) => {
 export const fetchSingleBlog = (id) => async (dispatch) => {
   dispatch(blogsSlice.actions.requestForSingleBlogs());
   try {
-    const response = await axios.get(`${BASE_URL}/blog/get` / id, {
+    const response = await axios.get(`${BASE_URL}/blog/get/${id}`, {
       withCredentials: true,
     });
     dispatch(blogsSlice.actions.successForSingleBlog(response.data));
@@ -173,7 +174,7 @@ export const fetchSingleBlog = (id) => async (dispatch) => {
 export const fetchMyBlogs = () => async (dispatch) => {
   dispatch(blogsSlice.actions.requestForMyBlogs());
   try {
-    const response = await axios.get(`${BASE_URL}/blog/myBlogs`, {
+    const response = await axios.get(`${BASE_URL}/blog/myBlog`, {
       withCredentials: true,
     });
     dispatch(blogsSlice.actions.successForMyBlog(response.data));
@@ -199,6 +200,7 @@ export const updateBlog = (id, blogData) => async (dispatch) => {
       }
     );
     dispatch(blogsSlice.actions.successForUpdateBlog(response.data));
+    // navigate("/dashboard");
   } catch (error) {
     dispatch(
       blogsSlice.actions.failureForUpdateBlog(

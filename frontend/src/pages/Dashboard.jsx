@@ -12,6 +12,7 @@ import Applications from "../components/Applications";
 import MyApplications from "../components/MyApplications";
 import MyJobs from "../components/MyJobs";
 import CreateBlog from "../components/createBlog";
+import MyBlogs from "../components/MyBlogs";
 const Dashboard = () => {
   const { isAuthenticated, user, error, loading } = useSelector(
     (state) => state.user
@@ -84,6 +85,16 @@ const Dashboard = () => {
                   }}
                 >
                   Create Blog
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setComponentName("My Blogs");
+                    setShow(!show);
+                  }}
+                >
+                  My Blogs
                 </button>
               </li>
 
@@ -176,7 +187,8 @@ const Dashboard = () => {
 
                 case "Create Blog":
                   return <CreateBlog />;
-
+                case "My Blogs":
+                  return <MyBlogs />;
                 default:
                   <MyProfile />;
                   break;

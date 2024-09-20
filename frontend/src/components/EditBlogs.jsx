@@ -1,12 +1,15 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import {
-  createBlog,
-  resetBlogSlice,
+  fetchSingleBlog,
+  updateBlog,
   clearAllBlogErrors,
+  resetBlogSlice,
 } from "../store/slices/blogSlice";
-const CreateBlog = () => {
+import { toast } from "react-toastify";
+import { useParams, useNavigate } from "react-router-dom";
+
+const EditBlogs = () => {
   const [blogData, setBlogData] = useState({
     title: "",
     heading: "",
@@ -16,17 +19,26 @@ const CreateBlog = () => {
     image: "",
   });
 
-  const { loading, error, message } = useSelector((state) => state.blogs);
+  const { singleBlog, loading, error, message } = useSelector(
+    (state) => state.blogs
+  );
   const dispatch = useDispatch();
   const handleImageChange = (e) => {
     setBlogData({ ...blogData, image: e.target.files[0] });
   };
+  const navigateTo = useNavigate();
+  const { id } = useParams();
   const handleInputChange = (e) => {
     const { value, name } = e.target;
     setBlogData({ ...blogData, [name]: value });
   };
-
   useEffect(() => {
+    dispatch(fetchSingleBlog(id));
+  }, []);
+  useEffect(() => {
+    if (singleBlog) {
+      setBlogData(singleBlog);
+    }
     if (error) {
       toast.error(error);
       dispatch(clearAllBlogErrors());
@@ -34,23 +46,27 @@ const CreateBlog = () => {
     if (message) {
       toast.success(message);
       dispatch(resetBlogSlice());
+      // navigateTo("/dashboard");
     }
   }, [error, message, dispatch, loading]);
 
-  const postBlog = (e) => {
+  const EditBlog = (e) => {
     e.preventDefault();
+    console.log(blogData);
     const formData = new FormData();
     formData.append("title", blogData.title);
     formData.append("heading", blogData.heading);
     formData.append("description", blogData.description);
     formData.append("content", blogData.content);
     formData.append("category", blogData.category);
-
     if (blogData.image) {
       formData.append("image", blogData.image);
     }
-    // console.log(formData);
-    dispatch(createBlog(formData));
+    // console.log(formData.title);
+    dispatch(updateBlog(id, formData));
+    setTimeout(() => {
+      navigateTo("/dashboard");
+    }, 6000);
   };
 
   const nichesArray = [
@@ -77,8 +93,10 @@ const CreateBlog = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-3xl font-semibold text-yellow-200">Post a Blog</h3>
+    <div className="container h-screen mx-auto flex flex-col gap-2 overflow-auto mb-2">
+      <h3 className="text-3xl font-semibold text-center text-yellow-200">
+        Edit a Blog
+      </h3>
       <div className="flex flex-col gap-2">
         <label htmlFor="title" className="text-3xl font-medium ">
           Title
@@ -169,17 +187,17 @@ const CreateBlog = () => {
           // placeholder="Enter blog title"
         />
       </div>
-      <div className="flex-row justify-self-end items-end">
+      <div className=" flex flex-row justify-center items-center mb-2">
         <button
           className="w-fit border-none bg-[#111] text-[#fff] py-2 px-5 text-xl rounded-lg ml-40 hover:bg-yellow-400 transition-colors duration-300"
-          onClick={postBlog}
+          onClick={EditBlog}
           disabled={loading}
         >
-          Post Blog
+          Edit Blog
         </button>
       </div>
     </div>
   );
 };
 
-export default CreateBlog;
+export default EditBlogs;

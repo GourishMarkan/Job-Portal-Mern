@@ -14,7 +14,7 @@ const router = express.Router();
 router.post("/create", isAuthenticatedUser, postBlog);
 router.get("/getall", getAllBlogs);
 router.get("/get/:id", getBlogById);
-router.get("/myBlog/:id", getBlogsByUserId);
+router.get("/myBlog", isAuthenticatedUser, getBlogsByUserId);
 router.put("/update/:id", isAuthenticatedUser, updateBlog);
 router.delete("/delete/:id", isAuthenticatedUser, deleteBlog);
 export default router;

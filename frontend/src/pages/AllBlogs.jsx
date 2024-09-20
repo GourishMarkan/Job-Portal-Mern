@@ -7,9 +7,10 @@ import {
   resetBlogSlice,
 } from "../store/slices/blogSlice";
 import { useNavigate, Link } from "react-router-dom";
-import Blogs from "../components/Blogs";
+// import Blogs from "../components/Blogs";
 import Spinner from "../components/Spinner";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 const AllBlogs = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
   const { blogs, loading, error, message } = useSelector(
@@ -33,7 +34,7 @@ const AllBlogs = () => {
       toast.success(message);
       dispatch(resetBlogSlice());
     }
-    console.log(blogs);
+    // console.log(blogs);
   }, [isAuthenticated, error, message, dispatch]);
 
   return (
@@ -41,8 +42,8 @@ const AllBlogs = () => {
       {loading ? (
         <Spinner />
       ) : (
-        <div className="container mx-auto p-4">
-          <h3 className="text-3xl">
+        <div className="container h-screen mx-auto p-4">
+          <h3 className="text-3xl text-center text-yellow-300">
             Daily updated blogs on various technologies and topics
           </h3>
           {blogs.length === 0 ? (
@@ -68,10 +69,17 @@ const BlogCard = ({ blog }) => {
   return (
     <div className="flex flex-col md:flex-row bg-white shadow-md rounded-lg overflow-hidden mb-4">
       <div className="md:w-1/3">
-        <img
-          src={blog.image.url}
+        {/* <img
+          src={blog.image?.url}
           alt={blog.title}
           className="w-full h-full object-cover"
+        /> */}
+        <LazyLoadImage
+          alt={blog.title}
+          src={blog.image?.url}
+          effect="blur"
+          // width={500}
+          className="w-full h-fit object-cover rounded-lg"
         />
       </div>
       <div className=" flex  flex-col md:w-2/3 p-4 ">
@@ -87,8 +95,8 @@ const BlogCard = ({ blog }) => {
           {new Date(blog.createdAt).toLocaleDateString()}
         </small>
         <Link
-          to={`/view-daily-update/${blog._id}`}
-          className="bg-blue-500 text-white px-4 py-2 mt-8 ml-4 my-3 inline-block self-end  "
+          to={`/blog/${blog._id}`}
+          className="bg-blue-500 text-white px-4 py-2 mt-8 ml-4 my-3 inline-block self-end hover:bg-orange-600  "
         >
           View
         </Link>

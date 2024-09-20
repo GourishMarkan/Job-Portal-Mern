@@ -1,7 +1,7 @@
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { Blog } from "../models/blog.model.js";
 import { v2 as cloudinary } from "cloudinary";
-
+import mongoose from "mongoose";
 export const postBlog = catchAsyncErrors(async (req, res, next) => {
   const { title, description, content, category, heading, image } = req.body;
 
@@ -78,7 +78,7 @@ export const getAllBlogs = async (req, res) => {
 };
 export const getBlogsByUserId = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.user;
     const blogs = await Blog.find({ author: id }).sort({ createdAt: -1 });
     if (!blogs) {
       return res.status(404).json({
@@ -101,6 +101,12 @@ export const getBlogsByUserId = async (req, res) => {
 export const getBlogById = async (req, res) => {
   try {
     const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid blog ID",
+      });
+    }
     const blog = await Blog.findById(id);
     if (!blog) {
       return res.status(404).json({
@@ -149,7 +155,6 @@ export const updateBlog = async (req, res) => {
       if (image) {
         try {
           // delete the previous image
-          const prev = await cloudinary.uploader.destroy(blog.image.public_id);
           const cloudinaryResponse = await cloudinary.uploader.upload(
             image.tempFilePath,
             {
@@ -160,18 +165,24 @@ export const updateBlog = async (req, res) => {
             public_id: cloudinaryResponse.public_id,
             url: cloudinaryResponse.secure_url,
           };
+          // checking if the blog already has an image-
+          if (blog.image.public_id) {
+            const prev = await cloudinary.uploader.destroy(
+              blog.image.public_id
+            );
+          }
         } catch (error) {
           return res.status(500).json({
             success: false,
-            message: "Failed to update image",
+            message: error?.message || "Failed to update image",
           });
         }
       }
     }
 
-    console.log(blog.image);
+    // console.log(blog.image);
     blog.image = updatedImage || blog.image;
-    console.log(blog.image);
+    // console.log(blog.image);
     await blog.save();
 
     return res.status(200).json({

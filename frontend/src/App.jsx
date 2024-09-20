@@ -16,6 +16,8 @@ import { useEffect } from "react";
 import { getUser } from "./store/slices/userSlice";
 import CreateBlog from "./components/createBlog";
 import AllBlogs from "./pages/AllBlogs";
+import ViewBlogs from "./pages/ViewBlogs";
+import EditBlogs from "./components/EditBlogs";
 function App() {
   const dispatch = useDispatch();
 
@@ -39,6 +41,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route path="dashboard/create-blog" element={<CreateBlog />} />
           <Route path="blogs" element={<AllBlogs />} />
+          <Route path="blog/:id" element={<ViewBlogs />} />
+          <Route path="edit-blog/:id" element={<EditBlogs />} />
         </Routes>
         <Footer />
         <ToastContainer position="top-right" theme="dark" />
