@@ -92,6 +92,8 @@ export const postJob = catchAsyncErrors(async (req, res, next) => {
 
 export const getAllJobs = catchAsyncErrors(async (req, res, next) => {
   const { city, niche, searchKeyword } = req.query;
+  const page = parseInt(req.query?.page) || 1;
+  const limit = parseInt(req.query?.limit) || 10;
   const query = {};
   if (city) {
     query.location = city;
@@ -108,18 +110,34 @@ export const getAllJobs = catchAsyncErrors(async (req, res, next) => {
       },
     ];
   }
-  const jobs = await Job.find(query);
+  const jobs = await Job.find(query)
+    .skip((page - 1) * limit)
+    .limit(limit);
+  const totalJobs = await Job.countDocuments(query);
   res.status(200).json({
     success: true,
     jobs,
-    count: jobs.length,
+    page,
+    totalPages: Math.ceil(totalJobs / limit),
+    totalJobs,
+    // count: jobs.length,
   });
 });
 export const getMyJobs = catchAsyncErrors(async (req, res, next) => {
-  const myJobs = await Job.find({ postedBy: req.user._id });
+  const page = parseInt(req.query?.page) || 1;
+  const limit = parseInt(req.query?.limit) || 10;
+
+  const myJobs = await Job.find({ postedBy: req.user._id })
+    .skip((page - 1) * limit)
+    .limit(limit);
+  const totalJobs = await Job.countDocuments({ postedBy: req.user._id });
   res.status(200).json({
     success: true,
     myJobs,
+    page,
+    totalPages: Math.ceil(totalJobs / limit),
+    totalJobs,
+    message: "All jobs fetched successfully",
   });
 });
 export const deleteJob = catchAsyncErrors(async (req, res, next) => {

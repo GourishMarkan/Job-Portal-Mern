@@ -62,11 +62,20 @@ export const postBlog = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const getAllBlogs = async (req, res) => {
+  const page = parseInt(req.query?.page) || 1;
+  const limit = parseInt(req.query?.limit) || 10;
   try {
-    const blogs = await Blog.find().sort({ createdAt: -1 });
+    const blogs = await Blog.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+    const totalBlogs = await Blog.countDocuments();
     return res.status(200).json({
       success: true,
       blogs,
+      page,
+      totalPages: Math.ceil(totalBlogs / limit),
+      totalBlogs,
       message: "All blogs fetched successfully",
     });
   } catch (error) {
@@ -77,18 +86,29 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 export const getBlogsByUserId = async (req, res) => {
+  const page = parseInt(req.query?.page) || 1;
+  const limit = parseInt(req.query?.page) || 10;
   try {
     const { id } = req.user;
-    const blogs = await Blog.find({ author: id }).sort({ createdAt: -1 });
+    const blogs = await Blog.find({ author: id })
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit) // Skip blogs from previous pages
+      .limit(limit);
+
     if (!blogs) {
       return res.status(404).json({
         success: false,
         message: "No blogs found",
       });
     }
+    const totalBlogs = await Blog.countDocuments({ author: id });
     return res.status(200).json({
       success: true,
       blogs,
+      currentPage: page,
+      totalPages: Math.ceil(totalBlogs / limit), // Calculate total pages
+      totalBlogs,
+
       message: "All blogs fetched successfully",
     });
   } catch (error) {
