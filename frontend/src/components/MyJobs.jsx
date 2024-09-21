@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Spinner from "../components/Spinner";
@@ -9,19 +9,22 @@ import {
   getMyJobs,
   resetJobSlice,
 } from "../store/slices/jobSlice";
+import Pagination from "./Pagination";
 
 const MyJobs = () => {
-  const { loading, message, error, myJobs } = useSelector(
+  const { loading, message, error, myJobs, limit, totalPages } = useSelector(
     (state) => state.jobs
   );
+  const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
   const handleDeleteJob = (e, id) => {
     e.preventDefault();
     dispatch(deleteJob(id));
   };
   useEffect(() => {
-    dispatch(getMyJobs());
-  }, []);
+    dispatch(getMyJobs(currentPage, limit));
+  }, [currentPage]);
+
   useEffect(() => {
     // dispatch(getMyJobs());
     if (error) {
@@ -32,8 +35,12 @@ const MyJobs = () => {
       toast.success(message);
       dispatch(resetJobSlice());
     }
-    console.log(myJobs);
+    // console.log(myJobs);
   }, [message, error, dispatch]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   return (
     <>
       {loading ? (
@@ -112,17 +119,24 @@ const MyJobs = () => {
                         {element.offers}
                       </p>
                     )}
-                    <div className="flex-row justify-between ">
+                    <div className="flex-row justify-between items-center ">
                       <button
                         className=" border-none bg-[#111] text-[#fff] py-2 px-5 text-xl rounded-lg ml-40 hover:bg-yellow-400 transition-colors duration-300"
                         onClick={() => handleDeleteJob(element._id)}
                       >
-                        Delete Application
+                        Delete Job
                       </button>
                     </div>
                   </div>
                 );
               })}
+              <div className="">
+                <Pagination
+                  onPageChange={handlePageChange}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                />
+              </div>
             </div>
           </div>
         </>

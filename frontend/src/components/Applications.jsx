@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -10,14 +10,19 @@ import {
 // import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
+import Pagination from "./Pagination";
 const Applications = () => {
-  const { applications, loading, error, message } = useSelector(
-    (state) => state.applications
-  );
-  const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { applications, loading, error, message, totalPages, limit } =
+    useSelector((state) => state.applications);
+  // const { user, isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   // const navigateTo = useNavigate();
   useEffect(() => {
+    dispatch(fetchEmployerApplications(currentPage, limit));
     if (error) {
       toast.error(error);
       dispatch(clearAllApplicationErrors());
@@ -26,9 +31,7 @@ const Applications = () => {
       toast.success(message);
       dispatch(resetApplicationSlice());
     }
-
-    dispatch(fetchEmployerApplications());
-  }, [dispatch, error, message]);
+  }, [dispatch, error, currentPage]);
   const handleDeleteApplication = (id) => {
     dispatch(deleteApplication(id));
   };
@@ -76,7 +79,7 @@ const Applications = () => {
                       <span className="font-semibold text-xl text-[#111]">
                         Applicant's Phone
                       </span>
-                      {element.jobSeekerInfo.phone}
+                      {element.jobSeekerInfo.phoneNumber}
                     </p>
                     <p className="flex flex-col gap-1 text-lg text-gray-600">
                       <span className="font-semibold text-xl text-[#111]">
@@ -116,6 +119,13 @@ const Applications = () => {
                   </div>
                 );
               })}
+              <div className="">
+                <Pagination
+                  onPageChange={handlePageChange}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                />
+              </div>
             </div>
           </div>
         </>

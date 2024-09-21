@@ -8,15 +8,19 @@ import {
 import { toast } from "react-toastify";
 import Spinner from "./Spinner";
 import { Link } from "react-router-dom";
+import Pagination from "./Pagination";
 const MyApplications = () => {
-  const { loading, error, applications, message } = useSelector(
-    (state) => state.applications
-  );
+  const { loading, error, applications, message, limit, totalPages } =
+    useSelector((state) => state.applications);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchJobSeekerApplications());
-    console.log(applications);
-  }, []);
+    dispatch(fetchJobSeekerApplications(currentPage, limit));
+    // console.log(applications);
+  }, [currentPage]);
   useEffect(() => {
     if (error) {
       toast.error(error);
@@ -27,7 +31,7 @@ const MyApplications = () => {
       dispatch(clearAllApplicationErrors());
     }
     console.log(applications);
-  }, [error, message, dispatch]);
+  }, [error, dispatch]);
 
   const handleDeleteApplication = (id) => {
     dispatch(deleteApplication(id));
@@ -115,6 +119,13 @@ const MyApplications = () => {
                   </div>
                 );
               })}
+              <div className="">
+                <Pagination
+                  onPageChange={handlePageChange}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                />
+              </div>
             </div>
           </div>
         </>

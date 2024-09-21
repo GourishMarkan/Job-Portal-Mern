@@ -111,33 +111,67 @@ export const postApplication = catchAsyncErrors(async (req, res, next) => {
 });
 export const employerGetApplication = catchAsyncErrors(
   async (req, res, next) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
     const { _id } = req.user;
     const applications = await Application.find({
+      "employerInfo.id": _id,
+      "deletedBy.employer": false,
+    })
+      .skip((page - 1) * limit)
+      .limit(limit);
+    if (!applications) {
+      return res.status(404).json({
+        success: false,
+        message: "No applications found",
+      });
+    }
+    const totalApplications = await Application.countDocuments({
       "employerInfo.id": _id,
       "deletedBy.employer": false,
     });
     res.status(200).json({
       success: true,
       applications,
+      message: "Applications fetched successfully",
+      page,
+      totalPages: Math.ceil(totalApplications / limit),
+      totalApplications,
     });
   }
 );
 export const jobSeekerGetApplication = catchAsyncErrors(
   async (req, res, next) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
     const { _id } = req.user;
     console.log(_id);
 
     const applications = await Application.find({
       "jobSeekerInfo.id": _id,
       "deletedBy.jobSeeker": false,
-    });
+    })
+      .skip((page - 1) * limit)
+      .limit(limit);
     console.log(applications);
     if (!applications) {
-      return next(new ErrorHandler("No applications found", 404));
+      return res.status(404).json({
+        success: false,
+        message: "No applications found",
+      });
     }
+
+    const totalApplications = await Application.countDocuments({
+      "jobSeekerInfo.id": _id,
+      "deletedBy.jobSeeker": false,
+    });
     res.status(200).json({
       success: true,
       applications,
+      message: "Applications fetched successfully",
+      page,
+      totalPages: Math.ceil(totalApplications / limit),
+      totalApplications,
     });
   }
 );

@@ -2,31 +2,45 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import { clearAllJobErrors, fetchJobs } from "../store/slices/jobSlice";
+import {
+  clearAllJobErrors,
+  fetchJobs,
+  resetJobSlice,
+} from "../store/slices/jobSlice";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
+import Pagination from "../components/Pagination";
 const Jobs = () => {
   const [city, setCity] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
   const [niche, setNiche] = useState("");
   const [selectedNiche, setSelectedNiche] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
-  const { jobs, loading, error } = useSelector((state) => state.jobs);
+  const { jobs, loading, error, totalPages, limit, message } = useSelector(
+    (state) => state.jobs
+  );
+  const [currentPage, setCurrentPage] = useState(1);
   const handleCityChange = (city) => {
     setCity(city);
   };
   const handleNicheChange = (niche) => {
     setNiche(niche);
   };
-
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   const dispatch = useDispatch();
   useEffect(() => {
     if (error) {
       toast.error(error);
       dispatch(clearAllJobErrors());
     }
-    dispatch(fetchJobs(city, niche, searchKeyword));
-  }, [dispatch, city, niche, error]);
+    if (message) {
+      toast.success(message);
+      dispatch(resetJobSlice());
+    }
+    dispatch(fetchJobs(city, niche, searchKeyword, currentPage, limit));
+  }, [dispatch, city, niche, error, currentPage, limit]);
   // const handleCityChange=(e)=>{
   //   setCity(e.target.value);
   // }
@@ -80,13 +94,13 @@ const Jobs = () => {
       {loading ? (
         <Spinner />
       ) : (
-        <section className="py-10 px-25 m-h-[800px]">
-          <div className="flex relative justify-center w-[750px] mx-auto m-b-7.5">
+        <section className=" py-10 px-25 m-h-[800px]">
+          <div className="flex flex-wrap relative justify-center w-[750px] mx-auto m-b-7.5">
             <input
               type="text"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
-              className="w-11/12   text-sm rounded-lg py-3 pr-32 pl-2 border border-gray-500"
+              className="w-11/12   text-sm rounded-lg py-3 pr-32 pl-2 border border-gray-500  "
             />
             <button
               className="absolute right-10 top-[11px] bg-[#dfdf07] text-[#111] font-medium py-0.5 px-2.5 rounded-lg border-none"
@@ -216,6 +230,14 @@ const Jobs = () => {
                       </div>
                     );
                   })}
+                <div className="grid-flow-col-dense"></div>
+                <div className="">
+                  <Pagination
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    currentPage={currentPage}
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -70,6 +70,7 @@ export const getAllBlogs = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(limit);
     const totalBlogs = await Blog.countDocuments();
+    // console.log(Math.ceil(totalBlogs / limit));
     return res.status(200).json({
       success: true,
       blogs,
@@ -87,7 +88,7 @@ export const getAllBlogs = async (req, res) => {
 };
 export const getBlogsByUserId = async (req, res) => {
   const page = parseInt(req.query?.page) || 1;
-  const limit = parseInt(req.query?.page) || 10;
+  const limit = parseInt(req.query?.limit) || 10;
   try {
     const { id } = req.user;
     const blogs = await Blog.find({ author: id })
@@ -102,10 +103,12 @@ export const getBlogsByUserId = async (req, res) => {
       });
     }
     const totalBlogs = await Blog.countDocuments({ author: id });
+    console.log(totalBlogs);
+    console.log(Math.ceil(totalBlogs / limit));
     return res.status(200).json({
       success: true,
       blogs,
-      currentPage: page,
+      page,
       totalPages: Math.ceil(totalBlogs / limit), // Calculate total pages
       totalBlogs,
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import {
@@ -11,16 +11,18 @@ import { useNavigate, Link } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import Pagination from "../components/Pagination";
 const AllBlogs = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
-  const { blogs, loading, error, message } = useSelector(
+  const { blogs, loading, error, message, limit, totalPages } = useSelector(
     (state) => state.blogs
   );
+  const [currentPage, setCurrentPage] = useState(1);
   // const navigateTo = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchAllBlogs());
-  }, []);
+    dispatch(fetchAllBlogs(currentPage, limit));
+  }, [currentPage]);
   useEffect(() => {
     // if (!isAuthenticated) {
     //   navigateTo("/");
@@ -36,20 +38,22 @@ const AllBlogs = () => {
     }
     // console.log(blogs);
   }, [isAuthenticated, error, message, dispatch]);
-
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
   return (
     <>
       {loading ? (
         <Spinner />
       ) : (
-        <div className="container h-screen mx-auto p-4">
+        <div className="container h-screen mx-auto p-4 overflow-y-auto">
           <h3 className="text-3xl text-center text-yellow-300">
             Daily updated blogs on various technologies and topics
           </h3>
           {blogs.length === 0 ? (
             <p className="text-center text-gray-500">No updates found</p>
           ) : (
-            <div className="flex flex-wrap mx-2 mt-5">
+            <div className=" h-screen flex  flex-wrap mx-2 mt-5">
               {blogs.map((blog) => {
                 return (
                   <div key={blog._id} className="w-full px-2 mb-4">
@@ -58,6 +62,11 @@ const AllBlogs = () => {
                   </div>
                 );
               })}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
             </div>
           )}
         </div>

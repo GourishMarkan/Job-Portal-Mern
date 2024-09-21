@@ -95,7 +95,7 @@ const PostApplication = () => {
     if (message) {
       console.log("message is ", message);
       toast.success(message);
-      navigateTo("/dashboard");
+      navigateTo("/jobs");
       dispatch(resetApplicationSlice());
     }
     dispatch(fetchSingleJob(jobId));

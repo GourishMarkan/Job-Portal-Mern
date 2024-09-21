@@ -9,6 +9,8 @@ const applicationSlice = createSlice({
     message: null,
     error: null,
     loading: false,
+    totalPages: 1,
+    limit: 5,
   },
 
   reducers: {
@@ -18,7 +20,9 @@ const applicationSlice = createSlice({
     },
     successForAllApplications(state, action) {
       state.loading = false;
-      state.applications = action.payload;
+      state.applications = action.payload.applications;
+      state.totalPages = action.payload.totalPages;
+      state.message = action.payload.message;
       state.error = null;
     },
     failureForAllApplications(state, action) {
@@ -31,7 +35,9 @@ const applicationSlice = createSlice({
     },
     successForMyApplications(state, action) {
       state.loading = false;
-      state.applications = action.payload;
+      state.applications = action.payload.applications;
+      state.message = action.payload.message;
+      state.totalPages = action.payload.totalPages;
       state.error = null;
     },
     failureForMyApplications(state, action) {
@@ -76,25 +82,22 @@ const applicationSlice = createSlice({
       state.applications = state.applications;
       state.message = null;
       state.loading = false;
+      state.totalPages = state.totalPages;
     },
   },
 });
 
-export const fetchEmployerApplications = () => async (dispatch) => {
+export const fetchEmployerApplications = (page, limit) => async (dispatch) => {
   dispatch(applicationSlice.actions.requestForAllApplications());
   try {
     console.log("base url is ", BASE_URL);
     const response = await axios.get(
-      `http://localhost:4000/api/v1/application/employer/getall`,
+      `http://localhost:4000/api/v1/application/employer/getall?page=${page}&limit=${limit}`,
       {
         withCredentials: true,
       }
     );
-    dispatch(
-      applicationSlice.actions.successForAllApplications(
-        response.data.applications
-      )
-    );
+    dispatch(applicationSlice.actions.successForAllApplications(response.data));
     dispatch(applicationSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
@@ -105,21 +108,17 @@ export const fetchEmployerApplications = () => async (dispatch) => {
   }
 };
 
-export const fetchJobSeekerApplications = () => async (dispatch) => {
+export const fetchJobSeekerApplications = (page, limit) => async (dispatch) => {
   dispatch(applicationSlice.actions.requestForMyApplications());
   try {
     console.log("base url is ", BASE_URL);
     const response = await axios.get(
-      ` http://localhost:4000/api/v1/application/jobseeker/getall`,
+      ` http://localhost:4000/api/v1/application/jobseeker/getall?page=${page}&limit=${limit}`,
       {
         withCredentials: true,
       }
     );
-    dispatch(
-      applicationSlice.actions.successForMyApplications(
-        response.data.applications
-      )
-    );
+    dispatch(applicationSlice.actions.successForMyApplications(response.data));
     dispatch(applicationSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(

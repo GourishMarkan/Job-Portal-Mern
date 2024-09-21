@@ -12,6 +12,9 @@ const blogsSlice = createSlice({
     message: null,
     singleBlog: {},
     myBlogs: [],
+    page: 1,
+    totalPages: 1,
+    limit: 10,
   },
   reducers: {
     requestForAllBlogs(state) {
@@ -22,6 +25,7 @@ const blogsSlice = createSlice({
       state.loading = false;
       state.blogs = action.payload.blogs;
       state.error = null;
+      state.totalPages = action.payload.totalPages;
       state.message = action.payload.message;
     },
     failureForAllBlogs(state, action) {
@@ -52,11 +56,13 @@ const blogsSlice = createSlice({
       state.loading = false;
       state.myBlogs = action.payload.blogs;
       state.message = action.payload.message;
+      state.totalPages = action.payload.totalPages;
       state.error = null;
     },
     failureForMyBlog(state, action) {
       state.loading = false;
       state.error = action.payload;
+      // state.totalPages=action.payload
       state.message = null;
     },
     requestForPostBlog(state) {
@@ -107,6 +113,8 @@ const blogsSlice = createSlice({
       state.error = null;
       state.blogs = state.blogs;
       state.singleBlog = state.singleBlog;
+      state.myBlogs = state.myBlogs;
+      state.message = null;
     },
     resetBlogSlice(state) {
       state.error = null;
@@ -114,6 +122,8 @@ const blogsSlice = createSlice({
       state.loading = false;
       state.message = null;
       state.singleBlog = state.singleBlog;
+      state.myBlogs = state.myBlogs;
+      state.totalPages = state.totalPages;
     },
   },
 });
@@ -139,12 +149,15 @@ export const createBlog = (blogData) => async (dispatch) => {
   }
 };
 
-export const fetchAllBlogs = () => async (dispatch) => {
+export const fetchAllBlogs = (page, limit) => async (dispatch) => {
   dispatch(blogsSlice.actions.requestForAllBlogs());
   try {
-    const response = await axios.get(`${BASE_URL}/blog/getAll`, {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `${BASE_URL}/blog/getAll?page=${page}&limit=${limit}`,
+      {
+        withCredentials: true,
+      }
+    );
     dispatch(blogsSlice.actions.successForAllBlogs(response.data));
   } catch (error) {
     dispatch(
@@ -171,12 +184,15 @@ export const fetchSingleBlog = (id) => async (dispatch) => {
   }
 };
 
-export const fetchMyBlogs = () => async (dispatch) => {
+export const fetchMyBlogs = (pages, limit) => async (dispatch) => {
   dispatch(blogsSlice.actions.requestForMyBlogs());
   try {
-    const response = await axios.get(`${BASE_URL}/blog/myBlog`, {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `${BASE_URL}/blog/myBlog?page=${pages}&limit=${limit}`,
+      {
+        withCredentials: true,
+      }
+    );
     dispatch(blogsSlice.actions.successForMyBlog(response.data));
   } catch (error) {
     dispatch(

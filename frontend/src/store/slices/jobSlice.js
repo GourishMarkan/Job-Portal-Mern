@@ -11,6 +11,8 @@ const jobSlice = createSlice({
     message: null,
     singleJob: {},
     myJobs: [],
+    limit: 10,
+    totalPages: 1,
   },
   reducers: {
     requestForAllJobs(state) {
@@ -19,7 +21,9 @@ const jobSlice = createSlice({
     },
     successForAllJobs(state, action) {
       state.loading = false;
-      state.jobs = action.payload;
+      state.jobs = action.payload.jobs;
+      state.message = action.payload.message;
+      state.totalPages = action.payload.totalPages;
       state.error = null;
     },
     failureForAllJobs(state, action) {
@@ -79,7 +83,8 @@ const jobSlice = createSlice({
     },
     successForMyJobs(state, action) {
       state.loading = false;
-      state.myJobs = action.payload;
+      state.myJobs = action.payload.myJobs;
+      state.totalPages = action.payload.totalPages;
       state.error = null;
     },
     failureForMyJobs(state, action) {
@@ -97,6 +102,7 @@ const jobSlice = createSlice({
       state.loading = false;
       state.message = null;
       state.myJobs = state.myJobs;
+      state.totalPages = state.totalPages;
       state.singleJob = {};
     },
   },
@@ -105,7 +111,7 @@ const jobSlice = createSlice({
 export default jobSlice.reducer;
 
 export const fetchJobs =
-  (city, niche, searchKeyword = "") =>
+  (city, niche, searchKeyword = "", page, limit) =>
   async (dispatch) => {
     try {
       dispatch(jobSlice.actions.requestForAllJobs());
@@ -120,9 +126,15 @@ export const fetchJobs =
       if (niche) {
         queryParams.push(`niche=${niche}`);
       }
+      if (page) {
+        queryParams.push(`page=${page}`);
+      }
+      if (limit) {
+        queryParams.push(`limit=${limit}`);
+      }
       link += queryParams.join("&");
       const response = await axios.get(link, { withCredentials: true });
-      dispatch(jobSlice.actions.successForAllJobs(response.data.jobs));
+      dispatch(jobSlice.actions.successForAllJobs(response.data));
       dispatch(jobSlice.actions.clearAllErrors());
     } catch (error) {
       dispatch(
@@ -166,14 +178,17 @@ export const postJob = (jobData) => async (dispatch) => {
     );
   }
 };
-export const getMyJobs = () => async (dispatch) => {
+export const getMyJobs = ( page,limit) => async (dispatch) => {
   dispatch(jobSlice.actions.requestForMyJobs());
   try {
-    const response = await axios.get(`${BASE_URL}/job/getmyjobs`, {
-      withCredentials: true,
-    });
+    const response = await axios.get(
+      `${BASE_URL}/job/getmyjobs?page=${page}&limit=${limit}`,
+      {
+        withCredentials: true,
+      }
+    );
     // console.log(response.data.message);
-    dispatch(jobSlice.actions.successForMyJobs(response.data.myJobs));
+    dispatch(jobSlice.actions.successForMyJobs(response.data));
     dispatch(jobSlice.actions.clearAllErrors());
   } catch (error) {
     dispatch(
