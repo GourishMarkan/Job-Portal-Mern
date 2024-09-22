@@ -103,6 +103,39 @@ const userSlice = createSlice({
       state.user = state.user;
       state.error = action.payload;
     },
+    forgotRequest(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    forgotSuccess(state, action) {
+      state.loading = false;
+      state.error = null;
+      state.message = action.payload.message;
+    },
+    forgotFailed(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    resetRequest(state) {
+      state.loading = true;
+      state.error = null;
+    },
+    resetSuccess(state, action) {
+      state.loading = false;
+      state.error = null;
+      state.message = action.payload.message;
+    },
+    resetFailed(state, action) {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    resetUser(state){
+      state.loading = false;
+      state.error = null;
+      state.message = null;
+      state.user = {};
+      state.isAuthenticated =state.isAuthenticated;
+    }
   },
 });
 export const {
@@ -175,7 +208,41 @@ export const logout = () => async (dispatch) => {
     dispatch(userSlice.actions.logoutFailed(error.response.data.message));
   }
 };
+
+export const forgot = (data) => async (dispatch) => {
+  dispatch(userSlice.actions.forgotRequest());
+  try {
+    const resposne = await axios.post(
+      `${BASE_URL}/user/forgot-password`,
+      data,
+      { withCredentials: true }
+    );
+    dispatch(userSlice.actions.forgotSuccess(resposne.data));
+  } catch (error) {
+    // console.log(error);
+    dispatch(userSlice.actions.forgotFailed(error.response.data.message));
+  }
+};
+
+export const reset = (token, password) => async (dispatch) => {
+  dispatch(userSlice.actions.resetRequest());
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/user/reset-password/${token}`,
+      password,
+      { withCredentials: true }
+    );
+    dispatch(userSlice.actions.resetSuccess(response.data));
+  } catch (error) {
+    dispatch(userSlice.actions.resetFailed(error.response.data.message));
+  }
+};
 export const clearAllUserErrors = () => (dispatch) => {
   dispatch(userSlice.actions.clearAllErrors());
 };
+
+export const resetUserSlice=()=>(dispatch)=>{
+  dispatch(userSlice.actions.resetUser());
+}
+
 export default userSlice.reducer;

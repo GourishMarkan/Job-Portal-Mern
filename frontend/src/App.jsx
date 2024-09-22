@@ -18,6 +18,8 @@ import CreateBlog from "./components/createBlog";
 import AllBlogs from "./pages/AllBlogs";
 import ViewBlogs from "./pages/ViewBlogs";
 import EditBlogs from "./components/EditBlogs";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 function App() {
   const dispatch = useDispatch();
 
@@ -43,6 +45,8 @@ function App() {
           <Route path="blogs" element={<AllBlogs />} />
           <Route path="blog/:id" element={<ViewBlogs />} />
           <Route path="edit-blog/:id" element={<EditBlogs />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
         <Footer />
         <ToastContainer position="top-right" theme="dark" />

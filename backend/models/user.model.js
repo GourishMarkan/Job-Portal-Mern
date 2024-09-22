@@ -50,6 +50,9 @@ const userSchema = mongoose.Schema(
       required: true,
       enum: ["Job Seeker", "Employer"],
     },
+    resetPasswordToken: String,
+
+    resetPasswordTokenExpire: Date,
   },
   { timestamps: true }
 );

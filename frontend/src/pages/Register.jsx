@@ -95,7 +95,7 @@ const Register = () => {
       dispatch(clearAllUserErrors());
     }
     if (isAuthenticated) {
-      navigateTo("/");
+      navigateTo("/login");
     }
   }, [dispatch, error, isAuthenticated, loading, message]);
 
