@@ -108,6 +108,12 @@ const Login = () => {
                 <RiLock2Fill className="w-2/12 text-2xl bg-[#dfdf07] h-10 p-2 text-[#fff]" />
               </div>
             </div>
+            <Link
+              className="pt-0.5 pb-1    text-right border-none mt-2 font-semibold text-black underline text-lg rounded-lg w-fit-content"
+              to="/forgot-password"
+            >
+              Forgot Password ?
+            </Link>
             <button
               className="p-3 text-center border-none mt-6 font-bold text-[#fff] bg-[#dfdf07] text-lg rounded-lg w-fit-content"
               type="submit"
