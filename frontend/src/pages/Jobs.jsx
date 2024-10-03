@@ -124,7 +124,7 @@ const Jobs = () => {
                       id={city}
                       name="city"
                       value={city}
-                      checked={selectedCity === city}
+                      // checked={selectedCity === city}
                       onChange={() => {
                         handleCityChange(city);
                       }}
@@ -144,7 +144,7 @@ const Jobs = () => {
                       id={niche}
                       name="niche"
                       value={niche}
-                      checked={selectedNiche === niche}
+                      // checked={selectedNiche === niche}
                       onChange={() => {
                         handleNicheChange(niche);
                       }}
@@ -162,7 +162,7 @@ const Jobs = () => {
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
                 >
-                  <option value="">Filter By City</option>
+                  <option value={city}>Filter By City</option>
                   {cities.map((city, index) => (
                     <option value={city} key={index}>
                       {city}
@@ -184,12 +184,12 @@ const Jobs = () => {
               </div>
               {/* job-container */}
               {/* grid gap-10 py-12 w-full grid-cols-2 */}
-              <div className="grid gap-10 py-12 w-full grid-cols-2 ">
+              <div className="container grid gap-10 py-12 w-full grid-cols-2 ">
                 {jobs &&
                   jobs.map((element) => {
                     return (
                       <div
-                        className="transition duration-300 bg-[#f5f5f5] h-fit px-10 py-5 flex flex-col gap-1 rounded-md  no-underline hover:bg-[#85857c30]"
+                        className="transition duration-300 bg-[#f5f5f5] h-fit px-10 py-5 flex flex-col gap-1 rounded-md  no-underline hover:bg-slate-500 "
                         key={element._id}
                       >
                         {element.hiringMultipleCandidates === "Yes" ? (

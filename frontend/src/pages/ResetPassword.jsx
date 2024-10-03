@@ -71,7 +71,7 @@ const ResetPassword = () => {
               type="submit"
               className="w-full bg-slate-500 py-2 px-3 text-white font-semibold rounded-md hover:bg-slate-900"
             >
-              {loading ? "Sending..." : "Send Email"}
+              {loading ? "Resting..." : "Reset Password"}
             </button>
           </form>
         </div>
