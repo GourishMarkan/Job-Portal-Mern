@@ -8,9 +8,9 @@ const HowItWorks = () => {
       <h3 className="text-2xl font-semibold text-[#111] uppercase">
         How does it work?
       </h3>
-      <div className="flex flex-col gap-5">
-        <div className="mx-3 bg-[#fff] px-12.5 py-7.5 flex flex-col gap-3 rounded-md transition duration-300 hover: translate-y-2.5 hover:bg-[#111] hover:text-[#fff] ">
-          <div className="  w-fit flex bg-[#111] p-2.5 rounded-[100%] justify-center items-center transition duration-300 hover:text-white">
+      <div className="flex justify-evenly  gap-5">
+        <div className="mx-3 bg-[#fff] px-12.5 py-7.5 flex flex-col gap-3 rounded-md transition duration-300 hover: translate-y-2.5 hover:bg-[#111] hover:text-[#fff] w-1/4">
+          <div className="  w-fit flex bg-[#111] p-2.5 rounded-[100%] justify-center items-center transition duration-300 hover:text-white ">
             <LuUserPlus
               className="text-4xl text-[rgb(255,255,255)] transition duration-300 hover:text-[#fff] 
             "
@@ -23,7 +23,7 @@ const HowItWorks = () => {
             Customize your profile to highlight your skills or requirements.
           </p>
         </div>
-        <div className="mx-3 bg-[#fff] px-12.5 py-7.5 flex flex-col gap-4 rounded-md transition duration-300 hover: translate-y-2.5 hover:bg-[#111] hover:text-[#fff] ">
+        <div className="mx-3 bg-[#fff] px-12.5 py-7.5 flex flex-col gap-4 rounded-md transition duration-300 hover: translate-y-2.5 hover:bg-[#111] hover:text-[#fff] w-1/4 ">
           <div className=" w-fit flex bg-[#111] p-2.5 rounded-[100%] justify-center items-center transition duration-300 hover:text-white ">
             <VscTasklist
               className="text-4xl text-[#fff] transition duration-300 hover:text-[#fff] 
@@ -37,7 +37,7 @@ const HowItWorks = () => {
             to find jobs that match your skills and preferences.
           </p>
         </div>
-        <div className="mx-3 bg-[#fff] px-12.5 py-7.5 flex flex-col gap-4 rounded-md transition duration-300 hover: translate-y-2.5 hover:bg-[#111] hover:text-[#fff] ">
+        <div className="mx-3 bg-[#fff] px-12.5 py-7.5 flex flex-col gap-4 rounded-md transition duration-300 hover: translate-y-2.5 hover:bg-[#111] hover:text-[#fff] w-1/4 ">
           <div className=" w-fit flex bg-[#111] p-2.5 rounded-[100%] justify-center items-center transition duration-300 hover:text-white">
             <BiSolidLike
               className="text-4xl text-[#fff] transition duration-300 hover:text-[#fff] 
