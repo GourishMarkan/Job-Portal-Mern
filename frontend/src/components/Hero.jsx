@@ -2,7 +2,7 @@
 
 const Hero = () => {
   return (
-    <section className="min-h-[800px] flex flex-col justify-center items-center min-w-full max-w-[1700px] gap-12 mx-auto sm:max-w-full md:min-w-full md:p-5 md:text-center ">
+    <section className="min-h-[300px] flex flex-col justify-center items-center min-w-full max-w-[1700px] gap-12 mx-auto sm:max-w-full md:min-w-full md:p-5 md:text-center ">
       <h1 className="text-5xl uppercase font-bold ml-2 md:text-2xl">
         Find Your Dream Job Today
       </h1>
