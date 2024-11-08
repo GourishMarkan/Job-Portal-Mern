@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../../config/url";
+// import { BASE_URL } from "../../config/url";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 const updateProfileSlice = createSlice({
   name: "updateProfile",
   initialState: {

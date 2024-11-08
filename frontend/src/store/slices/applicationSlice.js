@@ -1,7 +1,8 @@
 /* eslint-disable no-self-assign */
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../../config/url";
+// import { BASE_URL } from "../../config/url";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 const applicationSlice = createSlice({
   name: "applications",
   initialState: {
@@ -12,7 +13,6 @@ const applicationSlice = createSlice({
     totalPages: 1,
     limit: 5,
   },
-
   reducers: {
     requestForAllApplications(state) {
       state.loading = true;

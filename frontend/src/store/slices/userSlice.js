@@ -1,8 +1,10 @@
 /* eslint-disable no-self-assign */
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL } from "../../config/url";
+// import { BASE_URL } from "../../config/url";
 // import { act } from "react";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+console.log(BASE_URL);
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -129,13 +131,13 @@ const userSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    resetUser(state){
+    resetUser(state) {
       state.loading = false;
       state.error = null;
       state.message = null;
       state.user = {};
-      state.isAuthenticated =state.isAuthenticated;
-    }
+      state.isAuthenticated = state.isAuthenticated;
+    },
   },
 });
 export const {
@@ -241,8 +243,8 @@ export const clearAllUserErrors = () => (dispatch) => {
   dispatch(userSlice.actions.clearAllErrors());
 };
 
-export const resetUserSlice=()=>(dispatch)=>{
+export const resetUserSlice = () => (dispatch) => {
   dispatch(userSlice.actions.resetUser());
-}
+};
 
 export default userSlice.reducer;
