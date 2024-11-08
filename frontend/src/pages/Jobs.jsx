@@ -7,7 +7,7 @@ import {
   fetchJobs,
   resetJobSlice,
 } from "../store/slices/jobSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import Pagination from "../components/Pagination";
 const Jobs = () => {
@@ -19,6 +19,8 @@ const Jobs = () => {
   const { jobs, loading, error, totalPages, limit, message } = useSelector(
     (state) => state.jobs
   );
+  const { isAuthenticated } = useSelector((state) => state.user);
+  const navigateTo = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const handleCityChange = (city) => {
     setCity(city);
@@ -38,6 +40,10 @@ const Jobs = () => {
     if (message) {
       toast.success(message);
       dispatch(resetJobSlice());
+    }
+    if (!isAuthenticated) {
+      navigateTo("/");
+      toast.error("You need to login first.");
     }
     dispatch(fetchJobs(city, niche, searchKeyword, currentPage, limit));
   }, [dispatch, city, niche, error, currentPage, limit]);

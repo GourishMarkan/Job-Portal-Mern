@@ -18,16 +18,16 @@ const AllBlogs = () => {
     (state) => state.blogs
   );
   const [currentPage, setCurrentPage] = useState(1);
-  // const navigateTo = useNavigate();
+  const navigateTo = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(fetchAllBlogs(currentPage, limit));
   }, [currentPage]);
   useEffect(() => {
-    // if (!isAuthenticated) {
-    //   navigateTo("/");
-    //   toast.error("You need to login first.");
-    // }
+    if (!isAuthenticated) {
+      navigateTo("/");
+      toast.error("You need to login first.");
+    }
     if (error) {
       toast.error(error);
       dispatch(clearAllBlogErrors());
