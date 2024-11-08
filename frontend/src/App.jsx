@@ -14,7 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { getUser } from "./store/slices/userSlice";
-import CreateBlog from "./components/createBlog";
+import CreateBlog from "./components/CreateBlog";
 import AllBlogs from "./pages/AllBlogs";
 import ViewBlogs from "./pages/ViewBlogs";
 import EditBlogs from "./components/EditBlogs";

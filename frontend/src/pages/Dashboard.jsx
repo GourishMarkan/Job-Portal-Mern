@@ -11,7 +11,7 @@ import JobPost from "../components/JobPost";
 import Applications from "../components/Applications";
 import MyApplications from "../components/MyApplications";
 import MyJobs from "../components/MyJobs";
-import CreateBlog from "../components/createBlog";
+import CreateBlog from "../components/CreateBlog";
 import MyBlogs from "../components/MyBlogs";
 const Dashboard = () => {
   const { isAuthenticated, user, error, loading } = useSelector(
