@@ -18,8 +18,8 @@ app.use(
     origin: [process.env.FRONTEND_URL],
     methods: ["GET", "POST", "PUT", "DELETE"],
     sameSite: "strict",
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    // httpsOnly: true,
+    // secure: process.env.NODE_ENV === "production",
     credentials: true,
   })
 );
