@@ -1,10 +1,12 @@
 /* eslint-disable no-self-assign */
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+// import { useNavigate } from "react-router-dom";
 // import { BASE_URL } from "../../config/url";
 // import { act } from "react";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 console.log(BASE_URL);
+// const navigate = useNavigate();
 const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -179,6 +181,7 @@ export const login = (data) => async (dispatch) => {
     // console.log(response.data);
     dispatch(userSlice.actions.loginSuccess(response.data));
     dispatch(userSlice.actions.clearAllErrors());
+    // navigate("/");
   } catch (error) {
     dispatch(userSlice.actions.loginFailure(error.response.data.message));
     // dispatch(userSlice.actions.setError(error.response.data));

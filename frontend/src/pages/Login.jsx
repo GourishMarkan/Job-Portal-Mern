@@ -6,7 +6,17 @@ import { FaRegUser } from "react-icons/fa";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { RiLock2Fill } from "react-icons/ri";
 import { Link } from "react-router-dom";
-import { clearAllUserErrors, login } from "../store/slices/userSlice";
+import {
+  clearAllUserErrors,
+  // login,
+  loginRequest,
+  loginSuccess,
+  loginFailure,
+  clearAllErrors,
+} from "../store/slices/userSlice";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+// // console.log(BASE_URL);
+import axios from "axios";
 const Login = () => {
   const [userDetails, setUserDetails] = useState({
     role: "",
@@ -14,9 +24,7 @@ const Login = () => {
     password: "",
   });
 
-  const { loading, error, isAuthenticated, message } = useSelector(
-    (state) => state.user
-  );
+  const { loading, error, message } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
   const navigateTo = useNavigate();
@@ -24,13 +32,27 @@ const Login = () => {
   //   const { name, value } = e.target;
   //   setUserDetails({ ...userDetails, [name]: value });
   // };
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("role", userDetails.role);
     formData.append("email", userDetails.email);
     formData.append("password", userDetails.password);
-    dispatch(login(formData));
+    // dispatch(login(formData));
+    dispatch(loginRequest());
+    try {
+      const response = await axios.post(`${BASE_URL}/user/login`, formData, {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      });
+      // console.log(response.data);
+      dispatch(loginSuccess(response.data));
+      dispatch(clearAllErrors());
+      navigateTo("/");
+    } catch (error) {
+      dispatch(loginFailure(error.response.data.message));
+      // dispatch(userSlice.actions.setError(error.response.data));
+    }
   };
 
   useEffect(() => {
@@ -42,10 +64,10 @@ const Login = () => {
     if (message) {
       toast.success(message);
     }
-    if (isAuthenticated) {
-      navigateTo("/");
-    }
-  }, [dispatch, error, loading, isAuthenticated]);
+    // if (isAuthenticated) {
+    //   navigateTo("/");
+    // }
+  }, [dispatch, error, loading]);
   return (
     <>
       <section className="flex mx-auto min-h-screen justify-center min-w-[1500px] max-w-[1500px]  sm:min-w-full">
