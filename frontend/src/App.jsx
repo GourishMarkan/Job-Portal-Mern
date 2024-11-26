@@ -20,6 +20,7 @@ import ViewBlogs from "./pages/ViewBlogs";
 import EditBlogs from "./components/EditBlogs";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ProtectedRoutes from "./components/ProtectedRoutes";
 function App() {
   const dispatch = useDispatch();
 
@@ -32,19 +33,67 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route
-            path="/post/application/:jobId"
-            element={<PostApplication />}
-          />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="dashboard/create-blog" element={<CreateBlog />} />
-          <Route path="blogs" element={<AllBlogs />} />
-          <Route path="blog/:id" element={<ViewBlogs />} />
-          <Route path="edit-blog/:id" element={<EditBlogs />} />
+          {/* <Route element={<ProtectedRoutes />}> */}
+          <Route
+            path="/jobs"
+            element={
+              <ProtectedRoutes>
+                <Jobs />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoutes>
+                <Dashboard />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/post/application/:jobId"
+            element={
+              <ProtectedRoutes>
+                <PostApplication />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="dashboard/create-blog"
+            element={
+              <ProtectedRoutes>
+                <CreateBlog />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="blogs"
+            element={
+              <ProtectedRoutes>
+                <AllBlogs />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="blog/:id"
+            element={
+              <ProtectedRoutes>
+                <ViewBlogs />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="edit-blog/:id"
+            element={
+              <ProtectedRoutes>
+                <EditBlogs />
+              </ProtectedRoutes>
+            }
+          />
+          {/* </Route> */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>

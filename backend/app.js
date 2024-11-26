@@ -17,7 +17,7 @@ app.use(
   cors({
     origin: [process.env.FRONTEND_URL],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    sameSite: "strict",
+    // sameSite: "strict",
     // httpsOnly: true,
     // secure: process.env.NODE_ENV === "production",
     credentials: true,
